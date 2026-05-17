@@ -14,12 +14,13 @@ export function AiPanel({ email }: AiPanelProps) {
   const [result, setResult] = useState<AIAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(true);
+  const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash');
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     setError(null);
     try {
-      const res = await analyzeWithAI(email);
+      const res = await analyzeWithAI(email, selectedModel);
       setResult(res);
       setExpanded(true);
     } catch (err: any) {
@@ -75,13 +76,25 @@ export function AiPanel({ email }: AiPanelProps) {
               <p className="text-text-secondary mb-6 max-w-md">
                 Trigger an AI-powered deep forensic analysis of this email to identify phishing tactics, impersonation attempts, and network indicators.
               </p>
-              <button 
-                onClick={handleAnalyze}
-                className="px-6 py-2.5 bg-accent-purple hover:bg-accent-purple/80 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
-              >
-                <BrainCircuit className="w-5 h-5" />
-                <span>Run AI Analysis</span>
-              </button>
+              <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <select 
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  className="bg-bg-dark border border-border-color text-text-primary text-sm rounded-lg focus:ring-accent-purple focus:border-accent-purple block p-2.5 outline-none transition-colors"
+                >
+                  <option value="gemini-2.5-flash">Gemini 2.5 Flash (Default)</option>
+                  <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                  <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+                  <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
+                </select>
+                <button 
+                  onClick={handleAnalyze}
+                  className="px-6 py-2.5 bg-accent-purple hover:bg-accent-purple/80 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
+                >
+                  <BrainCircuit className="w-5 h-5" />
+                  <span>Run AI Analysis</span>
+                </button>
+              </div>
               {error && <p className="mt-4 text-accent-red text-sm">{error}</p>}
             </div>
           )}

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { AnalyzedEmail, AIAnalysisResult } from '../types';
 
-export async function analyzeWithAI(email: AnalyzedEmail): Promise<AIAnalysisResult> {
+export async function analyzeWithAI(email: AnalyzedEmail, modelName: string = 'gemini-2.5-flash'): Promise<AIAnalysisResult> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   
   if (!apiKey) {
@@ -9,7 +9,7 @@ export async function analyzeWithAI(email: AnalyzedEmail): Promise<AIAnalysisRes
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // Using a solid standard model
+  const model = genAI.getGenerativeModel({ model: modelName });
   
   const prompt = `
   You are an experinced SOC Level 3 Analyst specializing in email forensics, phishing analysis and email Infrastructure
@@ -60,6 +60,6 @@ export async function analyzeWithAI(email: AnalyzedEmail): Promise<AIAnalysisRes
     return JSON.parse(cleanedText) as AIAnalysisResult;
   } catch (error) {
     console.error("AI Analysis failed:", error);
-    throw new Error('Failed to analyze email with AI. Check API key and network connection.');
+    throw new Error('Failed to analyze email with AI. Try switching the model');
   }
 }
