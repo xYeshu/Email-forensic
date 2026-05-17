@@ -2,12 +2,17 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { AnalyzedEmail, AIAnalysisResult } from '../types';
 
 export async function analyzeWithAI(email: AnalyzedEmail): Promise<AIAnalysisResult> {
-  const apiKey = "AIzaSyCghh6Z0lt0NmDGc5qFxHy-_wM2NCwNutc";
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('Gemini API key is missing. Please set VITE_GEMINI_API_KEY in your environment variables.');
+  }
+
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }); // Using a solid standard model
   
   const prompt = `
-  You are an expert SOC Level 3 Analyst specializing in email forensics and phishing analysis.
+  You are an experinced SOC Level 3 Analyst specializing in email forensics, phishing analysis and email Infrastructure
   Analyze the following email metadata, indicators of compromise, and content.
   
   Format your response STRICTLY as a JSON object matching this schema, with no markdown code blocks formatting (just pure JSON):

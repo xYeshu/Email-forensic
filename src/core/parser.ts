@@ -191,12 +191,14 @@ export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
     iocs,
     authResults,
     riskScore: 0,
-    threatLevel: 'Unknown'
+    threatLevel: 'Unknown',
+    justification: []
   };
 
-  const { riskScore, threatLevel } = calculateRiskScore(analyzed);
+  const { riskScore, threatLevel, justification } = calculateRiskScore(analyzed);
   analyzed.riskScore = riskScore;
   analyzed.threatLevel = threatLevel;
+  analyzed.justification = justification;
 
   return analyzed;
 }

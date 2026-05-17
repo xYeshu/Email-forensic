@@ -7,13 +7,15 @@ import { TimelinePanel } from './TimelinePanel';
 import { AiPanel } from './AiPanel';
 import type { AnalyzedEmail } from '../types';
 import { parseEmlFile } from '../core/parser';
-import { Shield, Trash2 } from 'lucide-react';
+import { Shield, Trash2, ChevronDown, ChevronUp, FileText } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { InfoTooltip } from './InfoTooltip';
 
 export function Dashboard() {
   const [email, setEmail] = useState<AnalyzedEmail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [rawExpanded, setRawExpanded] = useState(false);
 
   const handleFile = async (file: File) => {
     setIsLoading(true);
@@ -35,7 +37,7 @@ export function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark text-text-primary pb-20">
+    <div className="min-h-screen bg-bg-dark text-text-primary flex flex-col">
       {/* Header */}
       <header className="border-b border-border-color bg-bg-panel sticky top-0 z-40 backdrop-blur-md bg-opacity-80">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -45,14 +47,14 @@ export function Dashboard() {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight">Email Forensic Analyser</h1>
-              <p className="text-xs text-text-muted uppercase tracking-wider">Local Client-Side Investigation</p>
+              <p className="text-xs text-text-muted uppercase tracking-wider">One Stop Solution for Email Forensic and Analysis</p>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl w-full mx-auto px-4 py-8 flex-grow">
         {!email && !isLoading && (
           <div className="max-w-3xl mx-auto mt-12 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="text-center space-y-4 mb-12">
@@ -89,8 +91,19 @@ export function Dashboard() {
                 )}>
                   {email.threatLevel} Email
                 </div>
-                <div className="text-sm text-text-secondary">
-                  Risk Score: <span className="font-mono text-text-primary">{email.riskScore}/100</span>
+                <div className="flex items-center text-sm text-text-secondary">
+                  <span>Risk Score:</span>
+                  <span className="font-mono text-text-primary ml-2">{email.riskScore}/100</span>
+                  <InfoTooltip content={
+                    <div className="space-y-1">
+                      <p className="font-semibold mb-2 text-text-primary">Score Justification:</p>
+                      <ul className="list-disc pl-4 space-y-1">
+                        {email.justification?.map((reason, i) => (
+                          <li key={i}>{reason}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  } />
                 </div>
               </div>
               <button 
@@ -112,19 +125,41 @@ export function Dashboard() {
             <TimelinePanel email={email} />
             
             {/* Raw Body Content (Optional viewing) */}
-            <div className="bg-bg-card border border-border-color rounded-xl overflow-hidden shadow-lg mt-6">
-               <div className="px-6 py-4 bg-bg-panel border-b border-border-color">
-                  <h2 className="text-lg font-semibold text-text-primary">Raw Content Preview</h2>
+            <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mt-6">
+               <div 
+                 className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+                 onClick={() => setRawExpanded(!rawExpanded)}
+               >
+                 <div className="flex items-center space-x-3">
+                   <FileText className="w-6 h-6 text-text-muted" />
+                   <h2 className="text-xl font-semibold text-text-primary">Raw Content Preview</h2>
+                 </div>
+                 {rawExpanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
                </div>
-               <div className="p-6">
-                  <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 rounded border border-border-color">
-                     {email.body || email.html || 'No readable text content found.'}
-                  </pre>
-               </div>
+               
+               {rawExpanded && (
+                 <div className="p-6">
+                    <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 rounded border border-border-color">
+                       {email.body || email.html || 'No readable text content found.'}
+                    </pre>
+                 </div>
+               )}
             </div>
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <footer className="py-6 text-center text-sm text-text-muted mt-auto">
+        <a 
+          href="https://yeshuwanjari.in" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="hover:text-accent-cyan transition-colors"
+        >
+          Product by Yeshu
+        </a>
+      </footer>
     </div>
   );
 }

@@ -1,19 +1,32 @@
 import { useState } from 'react';
 import { Mail, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
 import type { AnalyzedEmail } from '../types';
+import { InfoTooltip } from './InfoTooltip';
 
 export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl overflow-hidden shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
       <div 
-        className="px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-b border-border-color"
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
           <Mail className="w-6 h-6 text-accent-cyan" />
-          <h2 className="text-xl font-semibold text-text-primary">Header Analysis</h2>
+          <h2 className="text-xl font-semibold text-text-primary flex items-center">
+            Header Analysis
+            <InfoTooltip content={
+              <div className="space-y-2">
+                <p><strong>Relevance:</strong> Email headers contain vital routing and authentication metadata.</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li><strong>SPF/DKIM/DMARC:</strong> Verify if the sender is authorized to send on behalf of the domain. Failures strongly indicate spoofing.</li>
+                  <li><strong>Message-ID:</strong> A unique identifier that can be used to trace the email across systems.</li>
+                  <li><strong>Reply-To Mismatch:</strong> Attackers often forge the 'From' address but set 'Reply-To' to their own address to receive your replies.</li>
+                </ul>
+              </div>
+            } />
+          </h2>
         </div>
         {expanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
       </div>

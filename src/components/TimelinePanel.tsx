@@ -1,21 +1,34 @@
 import { useState } from 'react';
 import { Route, ChevronDown, ChevronUp, Server, ArrowRight } from 'lucide-react';
 import type { AnalyzedEmail } from '../types';
+import { InfoTooltip } from './InfoTooltip';
 
 export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   if (email.received.length === 0) return null;
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl overflow-hidden shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
       <div 
-        className="px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-b border-border-color"
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
           <Route className="w-6 h-6 text-accent-green" />
-          <h2 className="text-xl font-semibold text-text-primary">Delivery Timeline (Received Hops)</h2>
+          <h2 className="text-xl font-semibold text-text-primary flex items-center">
+            Delivery Timeline (Received Hops)
+            <InfoTooltip content={
+              <div className="space-y-2">
+                <p><strong>Relevance:</strong> Shows the exact path an email took across the internet.</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li><strong>Hop 1:</strong> Usually reveals the true originating IP address.</li>
+                  <li><strong>Mismatches:</strong> Can indicate spoofed sending domains.</li>
+                  <li><strong>Delays:</strong> High delays may indicate security queues or malicious holds.</li>
+                </ul>
+              </div>
+            } />
+          </h2>
         </div>
         <div className="flex items-center space-x-4">
           <div className="px-3 py-1 bg-bg-dark rounded-full text-xs font-medium text-text-secondary border border-border-color">
@@ -27,14 +40,6 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
 
       {expanded && (
         <div className="p-6">
-          <div className="mb-6 p-4 bg-bg-dark rounded-lg border border-border-color text-sm text-text-secondary">
-            <p className="mb-2"><strong className="text-text-primary">Forensic Relevance:</strong> The Delivery Timeline (derived from <code className="text-accent-cyan bg-bg-panel px-1 py-0.5 rounded">Received</code> headers) shows the exact path an email took from the sender to your inbox. Reading from bottom to top (Hop 1 to latest):</p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li><strong>Hop 1 (Origin)</strong> usually reveals the true originating IP address of the sender.</li>
-              <li><strong>Mismatches</strong> between the claimed sending domain and the actual IP/server can indicate spoofing.</li>
-              <li><strong>Unexpected delays</strong> between hops can indicate the email was held in a queue, passing through security scanners, or intentionally delayed by attackers.</li>
-            </ul>
-          </div>
 
           <div className="relative border-l-2 border-border-color ml-4 space-y-8">
             {email.received.map((hop, i) => (

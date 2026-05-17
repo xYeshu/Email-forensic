@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Paperclip, ChevronDown, ChevronUp, FileWarning, FileIcon, ShieldAlert, Download } from 'lucide-react';
 import type { AnalyzedEmail, AttachmentInfo } from '../types';
 import { formatBytes } from '../lib/utils';
+import { InfoTooltip } from './InfoTooltip';
 
 export function AttachmentPanel({ email }: { email: AnalyzedEmail }) {
   const [expanded, setExpanded] = useState(true);
@@ -9,14 +10,27 @@ export function AttachmentPanel({ email }: { email: AnalyzedEmail }) {
   if (email.attachments.length === 0) return null;
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl overflow-hidden shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
       <div 
-        className="px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-b border-border-color"
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
           <Paperclip className="w-6 h-6 text-accent-blue" />
-          <h2 className="text-xl font-semibold text-text-primary">Attachments</h2>
+          <h2 className="text-xl font-semibold text-text-primary flex items-center">
+            Attachments
+            <InfoTooltip content={
+              <div className="space-y-2">
+                <p><strong>Relevance:</strong> Attachments are a primary delivery mechanism for malware.</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li><strong>Executable Files:</strong> Direct threats (.exe, .scr, .vbs) are flagged automatically.</li>
+                  <li><strong>Macro-Enabled Docs:</strong> Often contain malicious VBA scripts (.docm, .xlsm).</li>
+                  <li><strong>Double Extensions:</strong> Used to trick users into opening files (e.g., invoice.pdf.exe).</li>
+                  <li><strong>SHA256:</strong> Use this hash to search Threat Intel platforms (VirusTotal) before downloading.</li>
+                </ul>
+              </div>
+            } />
+          </h2>
         </div>
         <div className="flex items-center space-x-4">
           <div className="px-3 py-1 bg-bg-dark rounded-full text-xs font-medium text-text-secondary border border-border-color">

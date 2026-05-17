@@ -18,6 +18,7 @@ export interface AnalyzedEmail {
   authResults: AuthResults;
   riskScore: number;
   threatLevel: 'Safe' | 'Suspicious' | 'Malicious' | 'Unknown';
+  justification?: string[];
 }
 
 export interface EmailAddress {

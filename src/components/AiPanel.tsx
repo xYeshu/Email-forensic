@@ -3,6 +3,7 @@ import { BrainCircuit, AlertTriangle, ShieldCheck, ChevronDown, ChevronUp } from
 import type { AnalyzedEmail, AIAnalysisResult } from '../types';
 import { analyzeWithAI } from '../core/ai';
 import { cn } from '../lib/utils';
+import { InfoTooltip } from './InfoTooltip';
 
 interface AiPanelProps {
   email: AnalyzedEmail;
@@ -29,14 +30,26 @@ export function AiPanel({ email }: AiPanelProps) {
   };
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl overflow-hidden shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
       <div 
-        className="px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-b border-border-color"
+        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b rounded-t-xl" : "rounded-xl")}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
           <BrainCircuit className="w-6 h-6 text-accent-purple" />
-          <h2 className="text-xl font-semibold text-text-primary">AI Analyst Investigation</h2>
+          <h2 className="text-xl font-semibold text-text-primary flex items-center">
+            AI Analyst Investigation
+            <InfoTooltip content={
+              <div className="space-y-2">
+                <p><strong>Relevance:</strong> AI serves as a powerful triaging assistant.</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li><strong>Correlations:</strong> AI can rapidly correlate text patterns, urgent language, and metadata anomalies.</li>
+                  <li><strong>Social Engineering:</strong> Highly effective at identifying advanced social engineering tactics that evade standard regex.</li>
+                  <li><strong>Remediation:</strong> Provides actionable steps for responding to the threat based on the findings.</li>
+                </ul>
+              </div>
+            } />
+          </h2>
         </div>
         <div className="flex items-center space-x-4">
           {result && (
