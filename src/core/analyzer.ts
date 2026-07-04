@@ -71,7 +71,7 @@ export function analyzeHeaders(headers: Record<string, string | string[]>) {
   return anomalies;
 }
 
-export function calculateRiskScore(email: AnalyzedEmail): { riskScore: number, threatLevel: 'Safe' | 'Suspicious' | 'Malicious' | 'Unknown', justification: string[] } {
+export function calculateRiskScore(email: AnalyzedEmail): { riskScore: number, justification: string[] } {
   let score = 0;
   const justification: string[] = [];
 
@@ -128,14 +128,55 @@ export function calculateRiskScore(email: AnalyzedEmail): { riskScore: number, t
     justification.push('High volume of URLs detected (+10)');
   }
 
-  let threatLevel: 'Safe' | 'Suspicious' | 'Malicious' | 'Unknown' = 'Unknown';
-  if (score >= 80) threatLevel = 'Malicious';
-  else if (score >= 40) threatLevel = 'Suspicious';
-  else threatLevel = 'Safe';
+  // Content Analysis findings
+  if (email.contentAnalysis) {
+    const ca = email.contentAnalysis;
+    if (ca.suspiciousFormCount > 0) {
+      score += 40;
+      justification.push(`Credential harvesting form(s) detected in HTML body (+40)`);
+    }
+    if (ca.embeddedScriptCount > 0) {
+      score += 35;
+      justification.push(`Embedded scripts or encoded payloads in HTML (+35)`);
+    }
+    if (ca.hiddenTextCount > 0) {
+      score += 15;
+      justification.push(`Hidden text detected in HTML body (+15)`);
+    }
+    if (ca.trackingPixelCount > 0) {
+      score += 5;
+      justification.push(`Tracking pixel(s) detected (+5)`);
+    }
+  }
+
+  // Domain Impersonation findings
+  if (email.domainAnalysis) {
+    const da = email.domainAnalysis;
+    if (da.homographCount > 0) {
+      score += 45;
+      justification.push(`Homograph/IDN impersonation attack detected (+45)`);
+    }
+    if (da.typosquatCount > 0) {
+      score += 30;
+      justification.push(`Typosquatting domain detected (+30)`);
+    }
+    if (da.subdomainAbuseCount > 0) {
+      score += 25;
+      justification.push(`Subdomain brand abuse detected (+25)`);
+    }
+    if (da.comboSquatCount > 0) {
+      score += 20;
+      justification.push(`Combo-squatting domain detected (+20)`);
+    }
+    if (da.punycodeCount > 0) {
+      score += 15;
+      justification.push(`Punycode/IDN domain detected (+15)`);
+    }
+  }
 
   if (score === 0) {
     justification.push('No immediate threats detected by heuristic engine.');
   }
 
-  return { riskScore: Math.min(score, 100), threatLevel, justification };
+  return { riskScore: Math.min(score, 100), justification };
 }

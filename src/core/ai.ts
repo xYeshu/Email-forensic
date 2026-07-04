@@ -12,7 +12,7 @@ export async function analyzeWithAI(email: AnalyzedEmail, modelName: string = 'g
   const model = genAI.getGenerativeModel({ model: modelName });
   
   const prompt = `
-  You are an experinced SOC Level 3 Analyst specializing in email forensics, phishing analysis and email Infrastructure
+  You are a highly experienced SOC Level 3 Analyst specializing in email forensics, phishing analysis and email infrastructure.
   Analyze the following email metadata, indicators of compromise, and content.
   
   Format your response STRICTLY as a JSON object matching this schema, with no markdown code blocks formatting (just pure JSON):
@@ -22,9 +22,32 @@ export async function analyzeWithAI(email: AnalyzedEmail, modelName: string = 'g
     "confidence": number from 0 to 100,
     "explanation": "Detailed SOC-style explanation of why you reached this verdict, analyzing headers, content, and authentication results",
     "phishingTechniques": ["list of identified techniques like 'Impersonation', 'Urgency', 'Credential Harvesting'"],
-    "remediation": ["Actionable steps for the SOC or user, e.g., 'Block domain X on firewall', 'Reset user password'"],
-    "networkIndicators": ["Any suspicious domains, IPs, or URLs extracted or identified"]
+    "remediation": ["Actionable steps for the Client, e.g., 'Block domain X on firewall', 'Purge mail from the users mailbox','Reset user password'"],
+    "networkIndicators": ["Any suspicious domains, IPs, or URLs extracted or identified"],
+    "residualRisk": {
+      "rating": "Low" | "Medium" | "High" | "Critical",
+      "justification": "A detailed paragraph explaining the residual risk rating. Depending on the context, we cant always conclude that an email is completely safe simply because no malicious indicators were found. Eg. Even if SPF, DKIM, and DMARC all pass, a legitimate sender may have been compromised. Always explain what residual risk still exists based on the available evidence.",
+      "items": [
+        {
+          "risk": "Short risk title",
+          "detail": "Detailed explanation of this specific residual risk"
+        }
+      ]
+    },
+    "cannotVerify": [
+      "A list of things that CANNOT be verified from the .eml file alone. For example: 'Whether the sender account has been compromised', 'Whether linked files are malicious without sandboxed execution', 'Whether the recipient has already interacted with the email', 'Whether similar emails were sent to other recipients'. Be specific and contextual to this particular email. If the email contains file attachments or file-sharing links from a legitimate sender, state that file safety cannot be confirmed from email artifacts alone. If a feature or evidence is unavailable, explicitly state that the conclusion cannot be made from the provided .eml file alone."
+    ]
   }
+
+  IMPORTANT INSTRUCTIONS FOR RESIDUAL RISK:
+  - A legitimate sender account or trusted infrastructure can be compromised while still passing SPF, DKIM, and DMARC validation.
+  - Because analysis is limited to the supplied email artifacts, a residual level of risk might sometimes remain depending on the email.
+  - Consider risks such as: sender account compromise, users already interacting with the email, credentials already being compromised, links remaining active, similar phishing campaigns continuing, sender infrastructure still being operational, and additional users having received similar emails.
+
+  IMPORTANT INSTRUCTIONS FOR CANNOT VERIFY:
+  - This section must explicitly state investigative limitations of email-only forensic analysis.
+  - State clearly what cannot be determined from the .eml file alone.
+  - Be contextual: if attachments exist, mention that file safety cannot be confirmed without sandboxed execution. If URLs exist, mention that destination safety cannot be confirmed without live analysis. If the sender appears legitimate, mention that account compromise cannot be ruled out from email artifacts alone.
 
   Here is the email data:
   Subject: ${email.subject}

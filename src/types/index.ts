@@ -16,9 +16,55 @@ export interface AnalyzedEmail {
   
   iocs: IOCs;
   authResults: AuthResults;
+  contentAnalysis: ContentAnalysis;
+  domainAnalysis: DomainAnalysis;
   riskScore: number;
-  threatLevel: 'Safe' | 'Suspicious' | 'Malicious' | 'Unknown';
   justification?: string[];
+}
+
+export interface DomainFinding {
+  type: 'homograph' | 'punycode' | 'typosquat' | 'subdomain-abuse' | 'combosquat';
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
+  brand: string;
+  legitimateDomain: string;
+  suspiciousDomain: string;
+  title: string;
+  description: string;
+  confidence: number;  // 0-100
+  technique: string;
+}
+
+export interface DomainAnalysis {
+  findings: DomainFinding[];
+  senderDomain: string;
+  isExactBrandMatch: boolean;
+  targetedBrands: string[];
+  homographCount: number;
+  punycodeCount: number;
+  typosquatCount: number;
+  subdomainAbuseCount: number;
+  comboSquatCount: number;
+}
+
+export type ContentFindingSeverity = 'info' | 'low' | 'medium' | 'high' | 'critical';
+
+export interface ContentFinding {
+  type: 'hidden-text' | 'tracking-pixel' | 'suspicious-form' | 'embedded-script' | 'encoded-content' | 'data-uri';
+  severity: ContentFindingSeverity;
+  title: string;
+  description: string;
+  evidence: string; // Snippet of the offending HTML/CSS
+  mitreTactic?: string;
+}
+
+export interface ContentAnalysis {
+  findings: ContentFinding[];
+  hiddenTextCount: number;
+  trackingPixelCount: number;
+  suspiciousFormCount: number;
+  embeddedScriptCount: number;
+  overallRisk: ContentFindingSeverity;
+  hasHtml: boolean;
 }
 
 export interface EmailAddress {
@@ -64,6 +110,11 @@ export interface AuthResults {
   raw: string;
 }
 
+export interface ResidualRiskItem {
+  risk: string;
+  detail: string;
+}
+
 export interface AIAnalysisResult {
   summary: string;
   verdict: 'Safe' | 'Suspicious' | 'Malicious';
@@ -72,4 +123,10 @@ export interface AIAnalysisResult {
   phishingTechniques: string[];
   remediation: string[];
   networkIndicators: string[];
+  residualRisk: {
+    rating: 'Low' | 'Medium' | 'High' | 'Critical';
+    justification: string;
+    items: ResidualRiskItem[];
+  };
+  cannotVerify: string[];
 }

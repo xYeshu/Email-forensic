@@ -2,6 +2,8 @@ import PostalMime from 'postal-mime';
 import type { AnalyzedEmail, EmailAddress, AttachmentInfo, ReceivedHop, AuthResults } from '../types';
 import { calculateHash } from '../lib/utils';
 import { extractIOCs, calculateRiskScore } from './analyzer';
+import { analyzeContent } from './contentAnalyzer';
+import { analyzeDomains } from './domainAnalyzer';
 
 export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
   const arrayBuffer = await file.arrayBuffer();
@@ -173,6 +175,13 @@ export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
       });
   }
 
+  // Run deep HTML content analysis
+  const contentAnalysis = analyzeContent(email.html || '');
+
+  // Run domain impersonation / typosquatting analysis
+  const senderDomain = from?.address?.split('@')[1] || '';
+  const domainAnalysis = analyzeDomains(senderDomain, iocs.domains, iocs.urls);
+
   const analyzed: AnalyzedEmail = {
     headers: headerMap,
     from,
@@ -190,14 +199,14 @@ export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
     date: email.date || '',
     iocs,
     authResults,
+    contentAnalysis,
+    domainAnalysis,
     riskScore: 0,
-    threatLevel: 'Unknown',
     justification: []
   };
 
-  const { riskScore, threatLevel, justification } = calculateRiskScore(analyzed);
+  const { riskScore, justification } = calculateRiskScore(analyzed);
   analyzed.riskScore = riskScore;
-  analyzed.threatLevel = threatLevel;
   analyzed.justification = justification;
 
   return analyzed;

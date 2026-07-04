@@ -5,6 +5,8 @@ import { IocPanel } from './IocPanel';
 import { AttachmentPanel } from './AttachmentPanel';
 import { TimelinePanel } from './TimelinePanel';
 import { AiPanel } from './AiPanel';
+import { ContentAnalysisPanel } from './ContentAnalysisPanel';
+import { DomainAnalysisPanel } from './DomainAnalysisPanel';
 import type { AnalyzedEmail } from '../types';
 import { parseEmlFile } from '../core/parser';
 import { Shield, Trash2, ChevronDown, ChevronUp, FileText } from 'lucide-react';
@@ -58,7 +60,7 @@ export function Dashboard() {
         {!email && !isLoading && (
           <div className="max-w-3xl mx-auto mt-12 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="text-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold text-text-primary">Professional SOC Email Triage</h2>
+              <h2 className="text-3xl font-bold text-text-primary">Advance Email Forensics analysis</h2>
               <p className="text-text-secondary text-lg">
                 Analyze headers, extract indicators of compromise (IOCs), and use AI to detect phishing attempts without sending your sensitive emails to a server.
               </p>
@@ -85,19 +87,17 @@ export function Dashboard() {
               <div className="flex items-center space-x-4">
                 <div className={cn(
                   "px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider border",
-                  email.threatLevel === 'Malicious' ? 'bg-accent-red/10 text-accent-red border-accent-red/30' :
-                  email.threatLevel === 'Suspicious' ? 'bg-accent-orange/10 text-accent-orange border-accent-orange/30' :
+                  email.riskScore >= 80 ? 'bg-accent-red/10 text-accent-red border-accent-red/30' :
+                  email.riskScore >= 40 ? 'bg-accent-orange/10 text-accent-orange border-accent-orange/30' :
                   'bg-accent-green/10 text-accent-green border-accent-green/30'
                 )}>
-                  {email.threatLevel} Email
+                  Static Risk Score: {email.riskScore}/100
                 </div>
                 <div className="flex items-center text-sm text-text-secondary">
-                  <span>Risk Score:</span>
-                  <span className="font-mono text-text-primary ml-2">{email.riskScore}/100</span>
                   <InfoTooltip content={
                     <div className="space-y-1">
                       <p className="font-semibold mb-2 text-text-primary">Score Justification:</p>
-                      <ul className="list-disc pl-4 space-y-1">
+                      <ul className="list-disc pl-4 space-y-1 text-xs">
                         {email.justification?.map((reason, i) => (
                           <li key={i}>{reason}</li>
                         ))}
@@ -118,11 +118,19 @@ export function Dashboard() {
             {/* AI Panel */}
             <AiPanel email={email} />
 
+
+
             {/* Core Panels */}
             <HeaderAnalysisPanel email={email} />
             <IocPanel email={email} />
             <AttachmentPanel email={email} />
             <TimelinePanel email={email} />
+
+            {/* Content / Body Analysis Panel */}
+            <ContentAnalysisPanel email={email} />
+
+            {/* Domain Impersonation Analysis Panel */}
+            <DomainAnalysisPanel email={email} />
             
             {/* Raw Body Content (Optional viewing) */}
             <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mt-6">
@@ -157,7 +165,7 @@ export function Dashboard() {
           rel="noopener noreferrer" 
           className="hover:text-accent-cyan transition-colors"
         >
-          Product by Yeshu
+          A product by Y
         </a>
       </footer>
     </div>
