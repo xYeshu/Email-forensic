@@ -74,9 +74,9 @@ const cardData: CardDataItem[] = [
   },
     {
     color: '#0a0a0a',
-    title: 'IOC Identification Attachment Examination',
+    title: 'IOC Identification & Extraction',
     description: 'Extracts, normalizes, and groups Indicators of Compromise including links, target emails, domains, file types and keywords.',
-    label: 'Files',
+    label: 'IOC',
     icon: Terminal,
   },
 
