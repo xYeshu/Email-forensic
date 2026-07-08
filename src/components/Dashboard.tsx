@@ -170,9 +170,9 @@ export function Dashboard() {
                 enableTilt={false}
                 enableMagnetism={false}
                 clickEffect={true}
-                spotlightRadius={300}
+                spotlightRadius={450}
                 particleCount={10}
-                glowColor="6, 182, 212"
+                glowColor="106, 206, 223"
               />
             </div>
           </div>
