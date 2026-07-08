@@ -192,15 +192,17 @@ const KEYBOARD_ADJACENT: Record<string, string[]> = {
 
 function detectHomographAttack(senderDomain: string, allDomains: string[]): DomainFinding[] {
   const findings: DomainFinding[] = [];
+  const canonicalBrandDomains = new Set(BRAND_DATABASE.flatMap(b => b.domains.map(d => d.toLowerCase())));
 
   for (const brand of BRAND_DATABASE) {
     for (const brandDomain of brand.domains) {
-      // Skip if it's an exact match (legitimate)
-      if (senderDomain.toLowerCase() === brandDomain) continue;
+      const senderDomainLower = senderDomain.toLowerCase();
+      // Skip if it's an exact match (legitimate) or matches another canonical brand domain
+      if (senderDomainLower === brandDomain || canonicalBrandDomains.has(senderDomainLower)) continue;
 
       // Check if normalizing homoglyphs makes it match a brand
       const brandBase = brandDomain.split('.')[0];
-      const senderBase = senderDomain.split('.')[0].toLowerCase();
+      const senderBase = getBaseDomain(senderDomainLower).split('.')[0];
       const normalizedBase = normalizeHomoglyphs(senderBase);
 
       if (normalizedBase === brandBase && senderBase !== brandBase) {
@@ -221,13 +223,18 @@ function detectHomographAttack(senderDomain: string, allDomains: string[]): Doma
 
   // Also check all extracted domains from the email body
   for (const domain of allDomains) {
-    if (domain === senderDomain) continue;
-    const domainBase = domain.split('.')[0].toLowerCase();
+    const domainLower = domain.toLowerCase();
+    if (domainLower === senderDomain.toLowerCase() || canonicalBrandDomains.has(domainLower)) continue;
+
+    const baseDomain = getBaseDomain(domainLower);
+    if (canonicalBrandDomains.has(baseDomain)) continue;
+
+    const domainBase = baseDomain.split('.')[0];
     const normalizedDomainBase = normalizeHomoglyphs(domainBase);
 
     for (const brand of BRAND_DATABASE) {
       for (const brandDomain of brand.domains) {
-        if (domain.toLowerCase() === brandDomain) continue;
+        if (domainLower === brandDomain) continue;
         const brandBase = brandDomain.split('.')[0];
         if (normalizedDomainBase === brandBase && domainBase !== brandBase) {
           findings.push({
@@ -281,14 +288,23 @@ function detectPunycode(senderDomain: string, allDomains: string[]): DomainFindi
 function detectTyposquatting(senderDomain: string, allDomains: string[]): DomainFinding[] {
   const findings: DomainFinding[] = [];
   const domainsToCheck = new Set([senderDomain, ...allDomains]);
+  const canonicalBrandDomains = new Set(BRAND_DATABASE.flatMap(b => b.domains.map(d => d.toLowerCase())));
 
   for (const domain of domainsToCheck) {
     const domainLower = domain.toLowerCase();
-    const domainBase = domainLower.split('.')[0];
+
+    // Skip if it's a known legitimate brand domain to avoid false positives
+    if (canonicalBrandDomains.has(domainLower)) continue;
+
+    const baseDomain = getBaseDomain(domainLower);
+    // Skip if base domain matches a brand domain exactly (e.g. sub.gmail.com is legitimate)
+    if (canonicalBrandDomains.has(baseDomain)) continue;
+
+    const domainBase = baseDomain.split('.')[0];
 
     for (const brand of BRAND_DATABASE) {
       for (const brandDomain of brand.domains) {
-        if (domainLower === brandDomain) continue;
+        if (domainLower === brandDomain || baseDomain === brandDomain) continue;
         const brandBase = brandDomain.split('.')[0];
 
         // Skip if lengths are too different (not a typo)
@@ -395,6 +411,7 @@ function detectSubdomainAbuse(senderDomain: string, allDomains: string[]): Domai
 function detectComboSquatting(senderDomain: string, allDomains: string[]): DomainFinding[] {
   const findings: DomainFinding[] = [];
   const domainsToCheck = new Set([senderDomain, ...allDomains]);
+  const canonicalBrandDomains = new Set(BRAND_DATABASE.flatMap(b => b.domains.map(d => d.toLowerCase())));
 
   // Common combo-squatting patterns
   const comboPatterns = [
@@ -406,19 +423,20 @@ function detectComboSquatting(senderDomain: string, allDomains: string[]): Domai
 
   for (const domain of domainsToCheck) {
     const domainLower = domain.toLowerCase();
-    const domainBase = domainLower.split('.')[0];
+    if (canonicalBrandDomains.has(domainLower)) continue;
+
+    const baseDomain = getBaseDomain(domainLower);
+    if (canonicalBrandDomains.has(baseDomain)) continue;
+
+    const domainBase = baseDomain.split('.')[0];
 
     for (const brand of BRAND_DATABASE) {
       for (const keyword of brand.keywords) {
         // Skip exact matches to brand domains
-        if (brand.domains.includes(domainLower)) continue;
+        if (brand.domains.includes(domainLower) || brand.domains.includes(baseDomain)) continue;
 
         // Check if domain base contains the brand keyword + extra text
         if (domainBase.includes(keyword) && domainBase !== keyword) {
-          // Verify it's not just a subdomain of the real brand
-          const baseDomain = getBaseDomain(domainLower);
-          if (brand.domains.includes(baseDomain)) continue;
-
           // Extract the "extra" part
           const extra = domainBase.replace(keyword, '').replace(/^[-_.]|[-_.]$/g, '');
           if (extra.length === 0) continue;

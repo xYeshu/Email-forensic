@@ -20,7 +20,7 @@ export async function analyzeWithAI(email: AnalyzedEmail, modelName: string = 'g
     "summary": "High-level executive summary of what this email is and its intent",
     "verdict": "Safe" | "Suspicious" | "Malicious",
     "confidence": number from 0 to 100,
-    "explanation": "Detailed SOC-style explanation of why you reached this verdict, analyzing headers, content, and authentication results",
+    "explanation": "Super Detailed SOC-style explanation of why you reached this verdict, analyzing headers, content, and authentication results",
     "phishingTechniques": ["list of identified techniques like 'Impersonation', 'Urgency', 'Credential Harvesting'"],
     "remediation": ["Actionable steps for the Client, e.g., 'Block domain X on firewall', 'Purge mail from the users mailbox','Reset user password'"],
     "networkIndicators": ["Any suspicious domains, IPs, or URLs extracted or identified"],

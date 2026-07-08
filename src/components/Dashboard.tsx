@@ -9,6 +9,7 @@ import { ContentAnalysisPanel } from './ContentAnalysisPanel';
 import { DomainAnalysisPanel } from './DomainAnalysisPanel';
 import MagicBento from './MagicBento';
 import ShinyText from './ShinyText';
+import Strands from './Strands';
 import type { AnalyzedEmail } from '../types';
 import { parseEmlFile } from '../core/parser';
 import { Shield, Trash2, ChevronDown, ChevronUp, FileText, Lock, CheckCircle } from 'lucide-react';
@@ -43,7 +44,7 @@ export function Dashboard() {
   return (
     <div className="min-h-screen bg-bg-dark text-text-primary flex flex-col">
       {/* Header */}
-      <header className="border-b border-border-color bg-bg-panel sticky top-0 z-40 backdrop-blur-md bg-opacity-80">
+      <header className="border-b border-border-color/20 bg-bg-panel/10 sticky top-0 z-40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-accent-cyan/10 border border-accent-cyan/30 rounded-lg flex items-center justify-center">
@@ -72,7 +73,7 @@ export function Dashboard() {
                 
                 <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
                   <ShinyText
-                    text="Advanced Email Forensic & Analysis Suite"
+                    text="Advanced AI Email Forensic & Analysis Suite"
                     speed={2}
                     delay={0}
                     color="#9b9a9aff"
@@ -84,7 +85,7 @@ export function Dashboard() {
                 </h2>
                 
                 <p className="text-text-secondary text-lg leading-relaxed">
-                  A high-performance, browser-native forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, and run deep body content analysis with absolute data privacy.
+                  A high-performance, browser-native AI forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, and run deep body content analysis with absolute data privacy.
                 </p>
 
                 <div className="flex items-center space-x-6 text-sm text-text-muted border-t border-border-color pt-6">
@@ -98,15 +99,15 @@ export function Dashboard() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Shield className="w-4 h-4 text-accent-purple" />
-                    <span>Heuristic Scans</span>
+                    <span>Fast, Deep & Accurate</span>
                   </div>
                 </div>
               </div>
 
-              <div className="lg:col-span-5 bg-bg-panel border border-border-color rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+              <div className="lg:col-span-5 bg-bg-panel  rounded-2xl p-6 shadow-xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent-cyan/5 rounded-full blur-3xl group-hover:bg-accent-cyan/10 transition-all duration-500" />
                 <div className="mb-4">
-                  <h3 className="text-lg font-bold text-text-primary">Analyze EML File</h3>
+                  <h3 className="text-lg font-bold text-text-primary">Start for Free</h3>
                   <p className="text-xs text-text-muted">Upload or drop a standard email message format (.eml)</p>
                 </div>
                 <UploadZone onFileSelect={handleFile} isLoading={isLoading} />
@@ -119,7 +120,30 @@ export function Dashboard() {
             </div>
 
             {/* Features Overview — MagicBento */}
-            <div className="space-y-6 border-t border-border-color pt-12">
+            <div className="space-y-6 ">
+              {/* Strands Component */}
+              <div style={{ width: '100%', height: '300px', position: 'relative' }} >
+                <Strands
+                  colors={["#F97316", "#7C3AED", "#06B6D4"]}
+                  count={3}
+                  speed={0.5}
+                  amplitude={1}
+                  waviness={1}
+                  thickness={0.7}
+                  glow={2.0}
+                  taper={2}
+                  spread={1}
+                  intensity={0.6}
+                  saturation={1.5}
+                  opacity={1}
+                  scale={2}
+                  glass={false}
+                  refraction={1}
+                  dispersion={1}
+                  glassSize={1}
+                />
+              </div>
+
               <div className="text-left space-y-2 px-3">
                 <h3 className="text-2xl font-bold tracking-tight">
                   <ShinyText
@@ -170,12 +194,12 @@ export function Dashboard() {
             <div className="flex items-center justify-between bg-bg-panel p-4 rounded-xl border border-border-color shadow-sm mb-6">
               <div className="flex items-center space-x-4">
                 <div className={cn(
-                  "px-4 py-2 rounded-lg font-bold text-sm uppercase tracking-wider border",
-                  email.riskScore >= 80 ? 'bg-accent-red/10 text-accent-red border-accent-red/30' :
-                  email.riskScore >= 40 ? 'bg-accent-orange/10 text-accent-orange border-accent-orange/30' :
-                  'bg-accent-green/10 text-accent-green border-accent-green/30'
+                  "px-4 py-2 rounded-lg font-bold text-sm  tracking-wider border",
+                  email.riskScore >= 80 ? ' text-accent-red border-accent-red/30' :
+                  email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30' :
+                  'text-accent-green border-accent-green/30'
                 )}>
-                  Static Risk Score: {email.riskScore}/100
+                  Header Risk Score: {email.riskScore}/100
                 </div>
                 <div className="flex items-center text-sm text-text-secondary">
                   <InfoTooltip content={

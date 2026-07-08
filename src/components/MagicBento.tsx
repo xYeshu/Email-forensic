@@ -30,19 +30,19 @@ const cardData: CardDataItem[] = [
     label: 'Domains',
     icon: Globe,
   },
-  {
+    {
     color: '#0a0a0a',
-    title: 'Local Content Inspection',
-    description: 'Inspects HTML markup for tracking pixels, text hidden using styles, credential-harvesting forms, and embedded scripts.',
-    label: 'Content',
-    icon: Eye,
+    title: 'AI-Powered Analysis',
+    description: 'Leverages custom trained advanced Google Gemini and Claude models to generate natural-language verdicts, contextual threat summaries, and actionable remediation steps from parsed forensic data.',
+    label: 'Intelligence',
+    icon: Sparkles,
   },
   {
     color: '#0a0a0a',
-    title: 'IOC Identification',
-    description: 'Extracts, normalizes, and groups Indicators of Compromise including links, target emails, domains, and keywords.',
-    label: 'Indicators',
-    icon: Terminal,
+    title: 'Client friendly ',
+    description: 'The Advanced AI models are custom trained to clearly state factors that could not be verified from the eml file and identify any Residual Risk',
+    label: 'Buissness friendly',
+    icon: FileText ,
   },
   {
     color: '#0a0a0a',
@@ -60,10 +60,10 @@ const cardData: CardDataItem[] = [
   },
   {
     color: '#0a0a0a',
-    title: 'Attachment Examination',
-    description: 'Identifies high-risk file types, extracts size metrics, and calculates cryptographic hashes for verification.',
-    label: 'Files',
-    icon: FileText,
+    title: 'Local Content Inspection',
+    description: 'Inspects HTML markup for tracking pixels, text hidden using styles, credential-harvesting forms, and embedded scripts.',
+    label: 'Content',
+    icon: Eye,
   },
   {
     color: '#0a0a0a',
@@ -72,13 +72,14 @@ const cardData: CardDataItem[] = [
     label: 'Privacy',
     icon: Lock,
   },
-  {
+    {
     color: '#0a0a0a',
-    title: 'AI-Powered Analysis',
-    description: 'Leverages Gemini to generate natural-language verdicts, contextual threat summaries, and actionable remediation steps from parsed forensic data.',
-    label: 'Intelligence',
-    icon: Sparkles,
+    title: 'IOC Identification Attachment Examination',
+    description: 'Extracts, normalizes, and groups Indicators of Compromise including links, target emails, domains, file types and keywords.',
+    label: 'Files',
+    icon: Terminal,
   },
+
 ];
 
 const createParticleElement = (x: number, y: number, color = DEFAULT_GLOW_COLOR) => {

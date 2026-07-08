@@ -4,6 +4,7 @@ import type { AnalyzedEmail, AIAnalysisResult } from '../types';
 import { analyzeWithAI } from '../core/ai';
 import { cn } from '../lib/utils';
 import { InfoTooltip } from './InfoTooltip';
+import Strands from './Strands';
 
 interface AiPanelProps {
   email: AnalyzedEmail;
@@ -100,13 +101,36 @@ export function AiPanel({ email }: AiPanelProps) {
           )}
 
           {isAnalyzing && (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="relative w-20 h-20 mb-6">
-                <div className="absolute inset-0 border-4 border-accent-purple/20 rounded-full"></div>
-                <div className="absolute inset-0 border-4 border-accent-purple border-t-transparent rounded-full animate-spin"></div>
-                <BrainCircuit className="absolute inset-0 m-auto w-8 h-8 text-accent-purple animate-pulse" />
+            <div className="relative w-full h-[300px] rounded-xl overflow-hidden border border-border-color/50 bg-bg-panel/30 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 z-0">
+                <Strands
+                  colors={["#F97316", "#7C3AED", "#06B6D4"]}
+                  count={3}
+                  speed={0.5}
+                  amplitude={1}
+                  waviness={1}
+                  thickness={0.7}
+                  glow={2.0}
+                  taper={2}
+                  spread={1}
+                  intensity={0.6}
+                  saturation={1.5}
+                  opacity={1}
+                  scale={2}
+                  glass={false}
+                  refraction={1}
+                  dispersion={1}
+                  glassSize={1}
+                />
               </div>
-              <p className="text-accent-purple animate-pulse font-medium">AI Analyst is investigating...</p>
+              {/* <div className="relative z-10 flex flex-col items-center space-y-4 px-6 py-4 bg-bg-dark/70 backdrop-blur-md rounded-2xl border border-border-color/40 shadow-2xl">
+                <div className="relative w-12 h-12 flex items-center justify-center">
+                  <div className="absolute inset-0 border-2 border-accent-purple/20 rounded-full"></div>
+                  <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin"></div>
+                  <BrainCircuit className="w-5 h-5 text-accent-purple animate-pulse" />
+                </div>
+                <p className="text-text-primary text-sm font-semibold tracking-wider uppercase animate-pulse">AI Analyst is investigating...</p>
+              </div> */}
             </div>
           )}
 
@@ -169,7 +193,7 @@ export function AiPanel({ email }: AiPanelProps) {
               {result.residualRisk && (
                 <div className="border border-border-color rounded-xl overflow-hidden">
                   <div className="px-5 py-4 bg-bg-panel border-b border-border-color flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center space-x-2">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center space-x-2">
                       <ShieldAlert className="w-4 h-4 text-accent-orange" />
                       <span>Residual Risk Assessment</span>
                     </h3>
@@ -220,7 +244,7 @@ export function AiPanel({ email }: AiPanelProps) {
               {result.cannotVerify && result.cannotVerify.length > 0 && (
                 <div className="border border-border-color rounded-xl overflow-hidden">
                   <div className="px-5 py-4 bg-bg-panel border-b border-border-color">
-                    <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider flex items-center space-x-2">
+                    <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center space-x-2">
                       <HelpCircle className="w-4 h-4 text-accent-cyan" />
                       <span>Investigative Limitations - Things We Cannot Verify</span>
                     </h3>
