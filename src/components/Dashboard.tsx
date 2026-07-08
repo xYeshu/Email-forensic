@@ -7,9 +7,11 @@ import { TimelinePanel } from './TimelinePanel';
 import { AiPanel } from './AiPanel';
 import { ContentAnalysisPanel } from './ContentAnalysisPanel';
 import { DomainAnalysisPanel } from './DomainAnalysisPanel';
+import MagicBento from './MagicBento';
+import ShinyText from './ShinyText';
 import type { AnalyzedEmail } from '../types';
 import { parseEmlFile } from '../core/parser';
-import { Shield, Trash2, ChevronDown, ChevronUp, FileText } from 'lucide-react';
+import { Shield, Trash2, ChevronDown, ChevronUp, FileText, Lock, CheckCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { InfoTooltip } from './InfoTooltip';
 
@@ -58,25 +60,107 @@ export function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl w-full mx-auto px-4 py-8 flex-grow">
         {!email && !isLoading && (
-          <div className="max-w-3xl mx-auto mt-12 space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <div className="text-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold text-text-primary">Advance Email Forensics analysis</h2>
-              <p className="text-text-secondary text-lg">
-                Analyze headers, extract indicators of compromise (IOCs), and use AI to detect phishing attempts without sending your sensitive emails to a server.
-              </p>
-            </div>
-            <UploadZone onFileSelect={handleFile} isLoading={isLoading} />
-            {error && (
-              <div className="p-4 bg-accent-red/10 border border-accent-red/30 rounded-lg text-accent-red text-center">
-                {error}
+          <div className="max-w-6xl mx-auto mt-8 space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            {/* Hero & Upload Panel Side-by-Side */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-7 space-y-6">
+                {/* <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-xs font-semibold uppercase tracking-wider">
+                  <span>Security First</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
+                  <span>Local Execution</span>
+                </div> */}
+                
+                <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+                  <ShinyText
+                    text="Advanced Email Forensic & Analysis Suite"
+                    speed={2}
+                    delay={0}
+                    color="#9b9a9aff"
+                    shineColor="#ffffff"
+                    spread={120}
+                    direction="left"
+                    className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight"
+                  />
+                </h2>
+                
+                <p className="text-text-secondary text-lg leading-relaxed">
+                  A high-performance, browser-native forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, and run deep body content analysis with absolute data privacy.
+                </p>
+
+                <div className="flex items-center space-x-6 text-sm text-text-muted border-t border-border-color pt-6">
+                  <div className="flex items-center space-x-2">
+                    <Lock className="w-4 h-4 text-accent-green" />
+                    <span>Zero Server Uploads</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="w-4 h-4 text-accent-cyan" />
+                    <span>Client-Side Parsing</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4 text-accent-purple" />
+                    <span>Heuristic Scans</span>
+                  </div>
+                </div>
               </div>
-            )}
+
+              <div className="lg:col-span-5 bg-bg-panel border border-border-color rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-accent-cyan/5 rounded-full blur-3xl group-hover:bg-accent-cyan/10 transition-all duration-500" />
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-text-primary">Analyze EML File</h3>
+                  <p className="text-xs text-text-muted">Upload or drop a standard email message format (.eml)</p>
+                </div>
+                <UploadZone onFileSelect={handleFile} isLoading={isLoading} />
+                {error && (
+                  <div className="mt-4 p-3 bg-accent-red/10 border border-accent-red/30 rounded-lg text-accent-red text-center text-sm">
+                    {error}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Features Overview — MagicBento */}
+            <div className="space-y-6 border-t border-border-color pt-12">
+              <div className="text-left space-y-2 px-3">
+                <h3 className="text-2xl font-bold tracking-tight">
+                  <ShinyText
+                    text="Engine Capabilities"
+                    speed={2}
+                    delay={0}
+                    color="#9b9a9aff"
+                    shineColor="#ffffff"
+                    spread={120}
+                    direction="left"
+                    className="text-2xl font-bold tracking-tight"
+                  />
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  A comprehensive array of specialized local analysis tools designed to examine headers, body, metadata, and routing vectors.
+                </p>
+              </div>
+
+              <MagicBento
+                textAutoHide={false}
+                enableStars={true}
+                enableSpotlight={true}
+                enableBorderGlow={true}
+                enableTilt={false}
+                enableMagnetism={false}
+                clickEffect={true}
+                spotlightRadius={300}
+                particleCount={10}
+                glowColor="6, 182, 212"
+              />
+            </div>
           </div>
         )}
 
         {isLoading && !email && (
-          <div className="max-w-3xl mx-auto mt-12">
-            <UploadZone onFileSelect={handleFile} isLoading={isLoading} />
+          <div className="max-w-md mx-auto mt-24 bg-bg-panel border border-border-color rounded-2xl p-8 text-center space-y-6 shadow-xl animate-pulse">
+            <div className="w-16 h-16 mx-auto border-4 border-accent-cyan border-t-transparent rounded-full animate-spin" />
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-text-primary">Performing Forensic Analysis</h3>
+              <p className="text-sm text-text-muted">Decoding routing hops, parsing HTML structure, and auditing credentials locally...</p>
+            </div>
           </div>
         )}
 
@@ -165,7 +249,7 @@ export function Dashboard() {
           rel="noopener noreferrer" 
           className="hover:text-accent-cyan transition-colors"
         >
-          A product by Y
+         Copyright © 2026 | Powered by Google Gemini 3.5
         </a>
       </footer>
     </div>
