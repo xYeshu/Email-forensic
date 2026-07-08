@@ -51,8 +51,8 @@ export function Dashboard() {
               <Shield className="w-6 h-6 text-accent-cyan" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight">Email Forensic Analyser</h1>
-              <p className="text-xs text-text-muted uppercase tracking-wider">One Stop Solution for Email Forensic and Analysis</p>
+              <h1 className="text-xl font-bold tracking-tight">NxtGen AI Email Forensics</h1>
+              <p className="text-xs text-text-muted uppercase tracking-wider">Automating Security Analysis with acuracy</p>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export function Dashboard() {
                 </h2>
                 
                 <p className="text-text-secondary text-lg leading-relaxed">
-                  A high-performance, browser-native AI forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, and run deep body content analysis with absolute data privacy.
+                  A high-performance, browser-native AI forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, identify Residual Risks and run deep body content analysis with absolute data privacy.
                 </p>
 
                 <div className="flex items-center space-x-6 text-sm text-text-muted border-t border-border-color pt-6">
