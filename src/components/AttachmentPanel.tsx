@@ -11,12 +11,12 @@ export function AttachmentPanel({ email }: { email: AnalyzedEmail }) {
 
   return (
     <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
-      <div 
+      <div
         className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <Paperclip className="w-6 h-6 text-accent-blue" />
+          <Paperclip className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
             Attachments
             <InfoTooltip content={
@@ -85,7 +85,7 @@ function AttachmentCard({ attachment }: { attachment: AttachmentInfo }) {
             <span className="text-text-secondary mr-2">SHA256:</span>
             {attachment.hash}
           </div>
-          
+
           {attachment.isSuspicious && attachment.suspiciousReasons.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {attachment.suspiciousReasons.map((reason, i) => (
@@ -98,8 +98,8 @@ function AttachmentCard({ attachment }: { attachment: AttachmentInfo }) {
           )}
         </div>
       </div>
-      
-      <button 
+
+      <button
         onClick={handleDownload}
         className="shrink-0 p-2 text-text-muted hover:text-accent-blue hover:bg-accent-blue/10 rounded-lg transition-colors border border-transparent hover:border-accent-blue/20"
         title="Download Attachment (Use Caution!)"

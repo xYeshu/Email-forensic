@@ -47,9 +47,6 @@ export function Dashboard() {
       <header className="border-b border-border-color/20 bg-bg-panel/10 sticky top-0 z-40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-accent-cyan/10 border border-accent-cyan/30 rounded-lg flex items-center justify-center">
-              <Shield className="w-6 h-6 text-accent-cyan" />
-            </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight">NxtGen AI Email Forensics</h1>
               <p className="text-xs text-text-muted uppercase tracking-wider">Automating Security Analysis with acuracy</p>
@@ -70,7 +67,7 @@ export function Dashboard() {
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
                   <span>Local Execution</span>
                 </div> */}
-                
+
                 <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
                   <ShinyText
                     text="Advanced AI Email Forensic & Analysis Suite"
@@ -83,14 +80,14 @@ export function Dashboard() {
                     className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight"
                   />
                 </h2>
-                
+
                 <p className="text-text-secondary text-lg leading-relaxed">
                   A high-performance, browser-native AI forensic engine designed to inspect headers, trace transmission hops, identify domain impersonation attacks, identify Residual Risks and run deep body content analysis with absolute data privacy.
                 </p>
 
                 <div className="flex items-center space-x-6 text-sm text-text-muted border-t border-border-color pt-6">
                   <div className="flex items-center space-x-2">
-                    <Lock className="w-4 h-4 text-accent-green" />
+                    <Lock className="w-4 h-4 text-accent-cyan" />
                     <span>Zero Server Uploads</span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -98,7 +95,7 @@ export function Dashboard() {
                     <span>Client-Side Parsing</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Shield className="w-4 h-4 text-accent-purple" />
+                    <Shield className="w-4 h-4 text-accent-cyan" />
                     <span>Fast, Deep & Accurate</span>
                   </div>
                 </div>
@@ -124,7 +121,7 @@ export function Dashboard() {
               {/* Strands Component */}
               <div style={{ width: '100%', height: '300px', position: 'relative' }} >
                 <Strands
-                  colors={["#F97316", "#7C3AED", "#06B6D4"]}
+                  colors={["#0f172a", "#334155", "#475569"]}
                   count={3}
                   speed={0.5}
                   amplitude={1}
@@ -196,8 +193,8 @@ export function Dashboard() {
                 <div className={cn(
                   "px-4 py-2 rounded-lg font-bold text-sm  tracking-wider border",
                   email.riskScore >= 80 ? ' text-accent-red border-accent-red/30' :
-                  email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30' :
-                  'text-accent-green border-accent-green/30'
+                    email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30' :
+                      'text-accent-green border-accent-green/30'
                 )}>
                   Header Risk Score: {email.riskScore}/100
                 </div>
@@ -214,7 +211,7 @@ export function Dashboard() {
                   } />
                 </div>
               </div>
-              <button 
+              <button
                 onClick={handleReset}
                 className="flex items-center space-x-2 px-4 py-2 bg-bg-dark border border-border-color hover:border-accent-red hover:text-accent-red rounded-lg transition-colors text-sm font-medium text-text-muted"
               >
@@ -239,27 +236,27 @@ export function Dashboard() {
 
             {/* Domain Impersonation Analysis Panel */}
             <DomainAnalysisPanel email={email} />
-            
+
             {/* Raw Body Content (Optional viewing) */}
             <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mt-6">
-               <div 
-                 className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
-                 onClick={() => setRawExpanded(!rawExpanded)}
-               >
-                 <div className="flex items-center space-x-3">
-                   <FileText className="w-6 h-6 text-text-muted" />
-                   <h2 className="text-xl font-semibold text-text-primary">Raw Content Preview</h2>
-                 </div>
-                 {rawExpanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
-               </div>
-               
-               {rawExpanded && (
-                 <div className="p-6">
-                    <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 rounded border border-border-color">
-                       {email.body || email.html || 'No readable text content found.'}
-                    </pre>
-                 </div>
-               )}
+              <div
+                className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+                onClick={() => setRawExpanded(!rawExpanded)}
+              >
+                <div className="flex items-center space-x-3">
+                  <FileText className="w-6 h-6 text-text-muted" />
+                  <h2 className="text-xl font-semibold text-text-primary">Raw Content Preview</h2>
+                </div>
+                {rawExpanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
+              </div>
+
+              {rawExpanded && (
+                <div className="p-6">
+                  <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 rounded border border-border-color">
+                    {email.body || email.html || 'No readable text content found.'}
+                  </pre>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -267,13 +264,13 @@ export function Dashboard() {
 
       {/* Footer */}
       <footer className="py-6 text-center text-sm text-text-muted mt-auto">
-        <a 
-          href="https://yeshuwanjari.in" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://yeshuwanjari.in"
+          target="_blank"
+          rel="noopener noreferrer"
           className="hover:text-accent-cyan transition-colors"
         >
-         Copyright © 2026 | Powered by Google Gemini 3.5
+          Copyright © 2026 | Powered by Google Gemini 3.5
         </a>
       </footer>
     </div>

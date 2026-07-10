@@ -5,17 +5,17 @@
   --bg-panel: #0a0a0a;
   --bg-card: #111111;
   --border-color: #1f2937;
-  
+
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
 
   --accent-cyan: #06b6d4;
-  --accent-blue: #3b82f6;
+  --accent-blue: #06b6d4;
   --accent-green: #10b981;
   --accent-red: #ef4444;
   --accent-orange: #f59e0b;
-  --accent-purple: #8b5cf6;
+  --accent-purple: #06b6d4;
 }
 
 @theme {
@@ -23,7 +23,7 @@
   --color-bg-panel: var(--bg-panel);
   --color-bg-card: var(--bg-card);
   --color-border-color: var(--border-color);
-  
+
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -48,13 +48,16 @@
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg-panel);
 }
+
 ::-webkit-scrollbar-thumb {
   background: #374151;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #4b5563;
 }

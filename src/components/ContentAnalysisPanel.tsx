@@ -65,7 +65,7 @@ function FindingCard({ finding }: { finding: ContentFinding }) {
       {isExpanded && (
         <div className="px-4 pb-4 pt-2 space-y-3 bg-bg-card border-t border-border-color/50 animate-in fade-in slide-in-from-top-2 duration-200">
           <p className="text-sm text-text-secondary leading-relaxed">{finding.description}</p>
-          
+
           {finding.mitreTactic && (
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">MITRE ATT&CK:</span>
@@ -106,7 +106,7 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <Eye className="w-6 h-6 text-accent-purple" />
+          <Eye className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
             Content / Body Analysis
             <InfoTooltip content={

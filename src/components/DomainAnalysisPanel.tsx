@@ -67,7 +67,7 @@ function DomainFindingCard({ finding }: { finding: DomainFinding }) {
       {isExpanded && (
         <div className="px-4 pb-4 pt-2 space-y-3 bg-bg-card border-t border-border-color/50 animate-in fade-in slide-in-from-top-2 duration-200">
           <p className="text-sm text-text-secondary leading-relaxed">{finding.description}</p>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="p-3 bg-bg-panel rounded-lg border border-border-color">
               <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Suspicious Domain</span>
@@ -90,11 +90,11 @@ function DomainFindingCard({ finding }: { finding: DomainFinding }) {
               <span className="font-semibold text-text-muted uppercase tracking-wider">Confidence:</span>
               <div className="flex items-center space-x-1">
                 <div className="w-16 h-1.5 bg-bg-dark rounded-full overflow-hidden">
-                  <div 
-                    className={cn("h-full rounded-full transition-all", 
-                      finding.confidence >= 80 ? 'bg-red-400' : 
-                      finding.confidence >= 60 ? 'bg-accent-orange' : 'bg-amber-400'
-                    )} 
+                  <div
+                    className={cn("h-full rounded-full transition-all",
+                      finding.confidence >= 80 ? 'bg-red-400' :
+                        finding.confidence >= 60 ? 'bg-accent-orange' : 'bg-amber-400'
+                    )}
                     style={{ width: `${finding.confidence}%` }}
                   />
                 </div>
@@ -135,7 +135,7 @@ export function DomainAnalysisPanel({ email }: DomainAnalysisPanelProps) {
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <Globe className="w-6 h-6 text-accent-orange" />
+          <Globe className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
             Domain Impersonation Analysis
             <InfoTooltip content={

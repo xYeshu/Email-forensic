@@ -33,12 +33,12 @@ export function AiPanel({ email }: AiPanelProps) {
 
   return (
     <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
-      <div 
+      <div
         className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b rounded-t-xl" : "rounded-xl")}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <BrainCircuit className="w-6 h-6 text-accent-purple" />
+          <BrainCircuit className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
             AI Analyst Investigation
             <InfoTooltip content={
@@ -58,8 +58,8 @@ export function AiPanel({ email }: AiPanelProps) {
             <div className={cn(
               "px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-2 border",
               result.verdict === 'Malicious' ? 'bg-accent-red/10 text-accent-red border-accent-red/30' :
-              result.verdict === 'Suspicious' ? 'bg-accent-orange/10 text-accent-orange border-accent-orange/30' :
-              'bg-accent-green/10 text-accent-green border-accent-green/30'
+                result.verdict === 'Suspicious' ? 'bg-accent-orange/10 text-accent-orange border-accent-orange/30' :
+                  'bg-accent-green/10 text-accent-green border-accent-green/30'
             )}>
               <span>{result.verdict}</span>
               <span className="opacity-75">| Confidence: {result.confidence}%</span>
@@ -78,7 +78,7 @@ export function AiPanel({ email }: AiPanelProps) {
                 Trigger an AI-powered deep forensic analysis of this email to identify phishing tactics, impersonation attempts, and network indicators.
               </p>
               <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                <select 
+                <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
                   className="bg-bg-dark border border-border-color text-text-primary text-sm rounded-lg focus:ring-accent-purple focus:border-accent-purple block p-2.5 outline-none transition-colors"
@@ -88,7 +88,7 @@ export function AiPanel({ email }: AiPanelProps) {
                   <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
                   <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
                 </select>
-                <button 
+                <button
                   onClick={handleAnalyze}
                   className="px-6 py-2.5 bg-accent-purple hover:bg-accent-purple/80 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
                 >
@@ -145,7 +145,7 @@ export function AiPanel({ email }: AiPanelProps) {
                       <p className="text-text-primary leading-relaxed">{result.summary}</p>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Detailed Analysis</h3>
                     <div className="p-4 bg-bg-panel rounded-lg border border-border-color">
@@ -200,9 +200,9 @@ export function AiPanel({ email }: AiPanelProps) {
                     <span className={cn(
                       "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border",
                       result.residualRisk.rating === 'Critical' ? 'bg-accent-red/15 text-accent-red border-accent-red/30' :
-                      result.residualRisk.rating === 'High' ? 'bg-accent-orange/15 text-accent-orange border-accent-orange/30' :
-                      result.residualRisk.rating === 'Medium' ? 'bg-amber-500/15 text-amber-400 border-amber-500/30' :
-                      'bg-accent-green/15 text-accent-green border-accent-green/30'
+                        result.residualRisk.rating === 'High' ? 'bg-accent-orange/15 text-accent-orange border-accent-orange/30' :
+                          result.residualRisk.rating === 'Medium' ? 'bg-amber-500/15 text-amber-400 border-amber-500/30' :
+                            'bg-accent-green/15 text-accent-green border-accent-green/30'
                     )}>
                       {result.residualRisk.rating} Risk
                     </span>
@@ -221,9 +221,9 @@ export function AiPanel({ email }: AiPanelProps) {
                               <div className={cn(
                                 "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5",
                                 result.residualRisk.rating === 'Critical' ? 'bg-accent-red/15 text-accent-red' :
-                                result.residualRisk.rating === 'High' ? 'bg-accent-orange/15 text-accent-orange' :
-                                result.residualRisk.rating === 'Medium' ? 'bg-amber-500/15 text-amber-400' :
-                                'bg-accent-green/15 text-accent-green'
+                                  result.residualRisk.rating === 'High' ? 'bg-accent-orange/15 text-accent-orange' :
+                                    result.residualRisk.rating === 'Medium' ? 'bg-amber-500/15 text-amber-400' :
+                                      'bg-accent-green/15 text-accent-green'
                               )}>
                                 {i + 1}
                               </div>

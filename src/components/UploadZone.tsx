@@ -23,7 +23,7 @@ export function UploadZone({ onFileSelect, isLoading }: UploadZoneProps) {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       if (file.name.endsWith('.eml')) {
@@ -51,13 +51,13 @@ export function UploadZone({ onFileSelect, isLoading }: UploadZoneProps) {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <input 
-        type="file" 
-        accept=".eml" 
+      <input
+        type="file"
+        accept=".eml"
         onChange={handleChange}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
       />
-      
+
       <div className="flex flex-col items-center justify-center p-6 text-center">
         {isLoading ? (
           <div className="w-12 h-12 mb-4 border-4 border-accent-cyan border-t-transparent rounded-full animate-spin" />

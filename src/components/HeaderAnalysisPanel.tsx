@@ -8,7 +8,7 @@ export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
 
   return (
     <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
-      <div 
+      <div
         className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
@@ -38,16 +38,16 @@ export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
             <div className="grid grid-cols-[100px_1fr] gap-2 text-sm">
               <span className="text-text-secondary">Subject:</span>
               <span className="text-text-primary font-medium">{email.subject}</span>
-              
+
               <span className="text-text-secondary">From:</span>
               <span className="text-text-primary font-mono">{email.from ? `${email.from.name} <${email.from.address}>` : 'Unknown'}</span>
-              
+
               <span className="text-text-secondary">To:</span>
               <span className="text-text-primary font-mono">{email.to.map(t => `<${t.address}>`).join(', ')}</span>
-              
+
               <span className="text-text-secondary">Date:</span>
               <span className="text-text-primary">{email.date}</span>
-              
+
               <span className="text-text-secondary">Message-ID:</span>
               <span className="text-text-primary font-mono text-xs break-all">{email.messageId}</span>
             </div>
@@ -55,21 +55,21 @@ export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
 
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider border-b border-border-color pb-2">Authentication & Routing</h3>
-            
+
             <div className="grid grid-cols-[100px_1fr] gap-2 text-sm mb-4">
               <span className="text-text-secondary">SPF:</span>
               <span className={`font-bold ${email.authResults.spf === 'Pass' ? 'text-accent-green' : email.authResults.spf === 'Fail' ? 'text-accent-red' : 'text-text-muted'}`}>{email.authResults.spf}</span>
-              
+
               <span className="text-text-secondary">DKIM:</span>
               <span className={`font-bold ${email.authResults.dkim === 'Pass' ? 'text-accent-green' : email.authResults.dkim === 'Fail' ? 'text-accent-red' : 'text-text-muted'}`}>{email.authResults.dkim}</span>
-              
+
               <span className="text-text-secondary">DMARC:</span>
               <span className={`font-bold ${email.authResults.dmarc === 'Pass' ? 'text-accent-green' : email.authResults.dmarc === 'Fail' ? 'text-accent-red' : 'text-text-muted'}`}>{email.authResults.dmarc}</span>
-              
+
               <span className="text-text-secondary">Return-Path:</span>
               <span className="text-text-primary font-mono text-xs break-all">{email.returnPath || 'N/A'}</span>
             </div>
-            
+
             {email.replyTo.length > 0 && email.from?.address !== email.replyTo[0].address && (
               <div className="bg-accent-orange/10 border border-accent-orange/30 p-3 rounded-lg flex items-start space-x-3">
                 <AlertCircle className="w-5 h-5 text-accent-orange shrink-0 mt-0.5" />

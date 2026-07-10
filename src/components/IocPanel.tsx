@@ -11,12 +11,12 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
 
   return (
     <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
-      <div 
+      <div
         className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <Target className="w-6 h-6 text-accent-red" />
+          <Target className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
             Indicators of Compromise (IOCs)
             <InfoTooltip content={
