@@ -14,7 +14,7 @@ export async function calculateHash(buffer: ArrayBuffer): Promise<string> {
     const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
     return buf2hex(hashBuffer);
   } catch (e) {
-    console.error("Hash calculation failed", e);
+    console.error("Hash calculation failed");
     return "";
   }
 }

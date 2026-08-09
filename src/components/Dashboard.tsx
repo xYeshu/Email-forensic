@@ -29,7 +29,7 @@ export function Dashboard() {
       const parsed = await parseEmlFile(file);
       setEmail(parsed);
     } catch (e: any) {
-      console.error(e);
+      console.error("EML parse failed:", e instanceof Error ? e.message : "Unknown error");
       setError("Failed to parse EML file. Please ensure it is a valid email file.");
     } finally {
       setIsLoading(false);
@@ -270,7 +270,7 @@ export function Dashboard() {
           rel="noopener noreferrer"
           className="hover:text-accent-cyan transition-colors"
         >
-          Copyright © 2026 | Powered by Google Gemini 3.5
+          Copyright © 2026 | Powered by Google Gemini
         </a>
       </footer>
     </div>
