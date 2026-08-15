@@ -31,13 +31,13 @@ function DomainFindingCard({ finding }: { finding: DomainFinding }) {
   const TypeIcon = typeInfo.icon;
 
   return (
-    <div className={cn("border rounded-lg overflow-hidden transition-all duration-200", severity.border, isExpanded ? 'shadow-md' : 'hover:shadow-sm')}>
+    <div className={cn("border overflow-hidden transition-all duration-200", severity.border, isExpanded ? 'shadow-md' : 'hover:shadow-sm')}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-4 py-3 flex items-center justify-between text-left bg-bg-panel hover:bg-bg-dark/50 transition-colors"
       >
         <div className="flex items-center space-x-3 min-w-0">
-          <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", severity.bg)}>
+          <div className={cn("w-8 h-8 flex items-center justify-center shrink-0", severity.bg)}>
             <TypeIcon className={cn("w-4 h-4", typeInfo.color)} />
           </div>
           <div className="min-w-0">
@@ -69,12 +69,12 @@ function DomainFindingCard({ finding }: { finding: DomainFinding }) {
           <p className="text-sm text-text-secondary leading-relaxed">{finding.description}</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3 bg-bg-panel rounded-lg border border-border-color">
+            <div className="p-3 bg-bg-panel border border-border-color">
               <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Suspicious Domain</span>
               <code className="text-sm font-mono text-red-400 break-all">{finding.suspiciousDomain}</code>
             </div>
             {finding.legitimateDomain !== 'N/A' && (
-              <div className="p-3 bg-bg-panel rounded-lg border border-border-color">
+              <div className="p-3 bg-bg-panel border border-border-color">
                 <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Legitimate Domain</span>
                 <code className="text-sm font-mono text-accent-green break-all">{finding.legitimateDomain}</code>
               </div>
@@ -129,9 +129,9 @@ export function DomainAnalysisPanel({ email }: DomainAnalysisPanelProps) {
   ];
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b rounded-t-xl" : "rounded-xl")}
+        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b" : "")}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -170,7 +170,7 @@ export function DomainAnalysisPanel({ email }: DomainAnalysisPanelProps) {
       {expanded && (
         <div className="p-6">
           {/* Sender Domain Summary */}
-          <div className="flex items-center space-x-4 mb-6 p-4 bg-bg-panel rounded-lg border border-border-color">
+          <div className="flex items-center space-x-4 mb-6 p-4 bg-bg-panel border border-border-color">
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Sender Domain:</span>
               <code className={cn(
@@ -218,7 +218,7 @@ export function DomainAnalysisPanel({ email }: DomainAnalysisPanelProps) {
                   <div
                     key={label}
                     className={cn(
-                      "flex flex-col items-center p-3 rounded-lg border transition-colors",
+                      "flex flex-col items-center p-3 border transition-colors",
                       count > 0 ? `${bg} border-current/20` : 'bg-bg-panel border-border-color',
                     )}
                   >

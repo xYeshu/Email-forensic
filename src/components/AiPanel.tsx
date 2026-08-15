@@ -32,9 +32,9 @@ export function AiPanel({ email }: AiPanelProps) {
   };
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b rounded-t-xl" : "rounded-xl")}
+        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b" : "")}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -81,7 +81,7 @@ export function AiPanel({ email }: AiPanelProps) {
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  className="bg-bg-dark border border-border-color text-text-primary text-sm rounded-lg focus:ring-accent-purple focus:border-accent-purple block p-2.5 outline-none transition-colors"
+                  className="bg-bg-dark border border-border-color text-text-primary text-sm focus:ring-accent-purple focus:border-accent-purple block p-2.5 outline-none transition-colors"
                 >
                   <option value="gemini-2.5-flash">Gemini 2.5 Flash (Default)</option>
                   <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
@@ -90,7 +90,7 @@ export function AiPanel({ email }: AiPanelProps) {
                 </select>
                 <button
                   onClick={handleAnalyze}
-                  className="px-6 py-2.5 bg-accent-purple hover:bg-accent-purple/80 text-white rounded-lg font-medium transition-colors flex items-center space-x-2"
+                  className="px-6 py-2.5 bg-accent-purple hover:bg-accent-purple/80 text-white font-medium transition-colors flex items-center space-x-2"
                 >
                   <BrainCircuit className="w-5 h-5" />
                   <span>Run AI Analysis</span>
@@ -101,7 +101,7 @@ export function AiPanel({ email }: AiPanelProps) {
           )}
 
           {isAnalyzing && (
-            <div className="relative w-full h-[300px] rounded-xl overflow-hidden border border-border-color/50 bg-bg-panel/30 flex flex-col items-center justify-center">
+            <div className="relative w-full h-[300px] overflow-hidden border border-border-color/50 bg-bg-panel/30 flex flex-col items-center justify-center">
               <div className="absolute inset-0 z-0">
                 <Strands
                   colors={["#F97316", "#7C3AED", "#06B6D4"]}
@@ -141,14 +141,14 @@ export function AiPanel({ email }: AiPanelProps) {
                 <div className="col-span-1 md:col-span-2 space-y-6">
                   <div>
                     <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Executive Summary</h3>
-                    <div className="p-4 bg-bg-panel rounded-lg border border-border-color">
+                    <div className="p-4 bg-bg-panel border border-border-color">
                       <p className="text-text-primary leading-relaxed">{result.summary}</p>
                     </div>
                   </div>
 
                   <div>
                     <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Detailed Analysis</h3>
-                    <div className="p-4 bg-bg-panel rounded-lg border border-border-color">
+                    <div className="p-4 bg-bg-panel border border-border-color">
                       <p className="text-text-secondary leading-relaxed whitespace-pre-wrap">{result.explanation}</p>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export function AiPanel({ email }: AiPanelProps) {
                     </h3>
                     <ul className="space-y-2">
                       {result.phishingTechniques.map((tech, i) => (
-                        <li key={i} className="flex items-start space-x-2 text-sm text-text-secondary bg-bg-panel p-2 rounded">
+                        <li key={i} className="flex items-start space-x-2 text-sm text-text-secondary bg-bg-panel p-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-accent-orange mt-1.5 shrink-0" />
                           <span>{tech}</span>
                         </li>
@@ -179,7 +179,7 @@ export function AiPanel({ email }: AiPanelProps) {
                     </h3>
                     <ul className="space-y-2">
                       {result.remediation.map((rec, i) => (
-                        <li key={i} className="flex items-start space-x-2 text-sm text-text-secondary bg-bg-panel p-2 rounded">
+                        <li key={i} className="flex items-start space-x-2 text-sm text-text-secondary bg-bg-panel p-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-accent-green mt-1.5 shrink-0" />
                           <span>{rec}</span>
                         </li>
@@ -191,7 +191,7 @@ export function AiPanel({ email }: AiPanelProps) {
 
               {/* Residual Risk Section — Full Width */}
               {result.residualRisk && (
-                <div className="border border-border-color rounded-xl overflow-hidden">
+                <div className="border border-border-color overflow-hidden">
                   <div className="px-5 py-4 bg-bg-panel border-b border-border-color flex items-center justify-between">
                     <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center space-x-2">
                       <ShieldAlert className="w-4 h-4 text-accent-orange" />
@@ -209,14 +209,14 @@ export function AiPanel({ email }: AiPanelProps) {
                   </div>
                   <div className="p-5 space-y-4">
                     {/* Justification */}
-                    <div className="p-4 bg-bg-panel rounded-lg border border-border-color">
+                    <div className="p-4 bg-bg-panel border border-border-color">
                       <p className="text-text-secondary leading-relaxed text-sm">{result.residualRisk.justification}</p>
                     </div>
                     {/* Individual Risk Items */}
                     {result.residualRisk.items && result.residualRisk.items.length > 0 && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {result.residualRisk.items.map((item, i) => (
-                          <div key={i} className="p-3 bg-bg-panel rounded-lg border border-border-color hover:border-accent-orange/30 transition-colors group">
+                          <div key={i} className="p-3 bg-bg-panel border border-border-color hover:border-accent-orange/30 transition-colors group">
                             <div className="flex items-start space-x-3">
                               <div className={cn(
                                 "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5",
@@ -242,7 +242,7 @@ export function AiPanel({ email }: AiPanelProps) {
 
               {/* Things We Cannot Verify Section — Full Width */}
               {result.cannotVerify && result.cannotVerify.length > 0 && (
-                <div className="border border-border-color rounded-xl overflow-hidden">
+                <div className="border border-border-color overflow-hidden">
                   <div className="px-5 py-4 bg-bg-panel border-b border-border-color">
                     <h3 className="text-sm font-semibold uppercase tracking-wider flex items-center space-x-2">
                       <HelpCircle className="w-4 h-4 text-accent-cyan" />
@@ -255,7 +255,7 @@ export function AiPanel({ email }: AiPanelProps) {
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {result.cannotVerify.map((item, i) => (
-                        <div key={i} className="flex items-start space-x-3 p-3 bg-bg-panel rounded-lg border border-border-color border-l-2 border-l-accent-cyan/40">
+                        <div key={i} className="flex items-start space-x-3 p-3 bg-bg-panel border border-border-color border-l-2 border-l-accent-cyan/40">
                           <div className="w-5 h-5 rounded-full bg-accent-cyan/10 flex items-center justify-center shrink-0 mt-0.5">
                             <HelpCircle className="w-3 h-3 text-accent-cyan" />
                           </div>

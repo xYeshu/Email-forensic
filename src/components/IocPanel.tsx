@@ -10,9 +10,9 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
   const hasIocs = iocs.urls.length > 0 || iocs.domains.length > 0 || iocs.ips.length > 0 || iocs.emails.length > 0 || iocs.hashes.length > 0;
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b' : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -55,7 +55,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.urls.map((url, i) => (
-                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 rounded break-all border border-border-color hover:border-accent-cyan/50 transition-colors flex justify-between items-start group">
+                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 break-all border border-border-color hover:border-accent-cyan/50 transition-colors flex justify-between items-start group">
                         <span className="mr-2">{url}</span>
                         <a href={`https://urlscan.io/search/#page.url:"${encodeURIComponent(url)}"`} target="_blank" rel="noreferrer" title="Check on urlscan.io" className="text-text-muted hover:text-accent-cyan transition-opacity">
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -75,7 +75,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.domains.map((domain, i) => (
-                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 rounded break-all border border-border-color hover:border-accent-blue/50 transition-colors flex justify-between items-start group">
+                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 break-all border border-border-color hover:border-accent-blue/50 transition-colors flex justify-between items-start group">
                         <span className="mr-2">{domain}</span>
                         <a href={`https://www.virustotal.com/gui/domain/${domain}`} target="_blank" rel="noreferrer" title="Check on VirusTotal" className="text-text-muted hover:text-accent-blue transition-opacity">
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -95,7 +95,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.ips.map((ip, i) => (
-                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 rounded break-all border border-border-color hover:border-accent-orange/50 transition-colors flex justify-between items-start group">
+                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 break-all border border-border-color hover:border-accent-orange/50 transition-colors flex justify-between items-start group">
                         <span className="mr-2">{ip}</span>
                         <a href={`https://www.abuseipdb.com/check/${ip}`} target="_blank" rel="noreferrer" title="Check on AbuseIPDB" className="text-text-muted hover:text-accent-orange transition-opacity">
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -115,7 +115,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.emails.map((emailAddr, i) => (
-                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 rounded break-all border border-border-color hover:border-accent-green/50 transition-colors">
+                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 break-all border border-border-color hover:border-accent-green/50 transition-colors">
                         {emailAddr}
                       </li>
                     ))}
@@ -132,7 +132,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.hashes.map((hash, i) => (
-                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 rounded break-all border border-border-color hover:border-accent-purple/50 transition-colors flex justify-between items-start group">
+                      <li key={i} className="text-xs font-mono text-text-secondary bg-bg-panel p-2 break-all border border-border-color hover:border-accent-purple/50 transition-colors flex justify-between items-start group">
                         <span className="mr-2">{hash}</span>
                         <a href={`https://www.virustotal.com/gui/file/${hash}`} target="_blank" rel="noreferrer" title="Check on VirusTotal" className="text-text-muted hover:text-accent-purple opacity-0 group-hover:opacity-100 transition-opacity">
                           <ExternalLink className="w-3.5 h-3.5" />

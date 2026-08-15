@@ -7,9 +7,9 @@ export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b' : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -71,7 +71,7 @@ export function HeaderAnalysisPanel({ email }: { email: AnalyzedEmail }) {
             </div>
 
             {email.replyTo.length > 0 && email.from?.address !== email.replyTo[0].address && (
-              <div className="bg-accent-orange/10 border border-accent-orange/30 p-3 rounded-lg flex items-start space-x-3">
+              <div className="bg-accent-orange/10 border border-accent-orange/30 p-3 flex items-start space-x-3">
                 <AlertCircle className="w-5 h-5 text-accent-orange shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-accent-orange">Suspicious Reply-To</p>

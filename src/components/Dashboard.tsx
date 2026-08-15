@@ -48,7 +48,7 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div>
-              <h1 className="text-xl font-bold tracking-tight">NxtGen AI Email Forensics</h1>
+              <h1 className="text-xl font-bold tracking-tight">AI Email Forensics</h1>
               <p className="text-xs text-text-muted uppercase tracking-wider">Automating Security Analysis with acuracy</p>
             </div>
           </div>
@@ -188,10 +188,10 @@ export function Dashboard() {
         {email && (
           <div className="animate-in fade-in duration-500 space-y-6">
             {/* Action Bar */}
-            <div className="flex items-center justify-between bg-bg-panel p-4 rounded-xl border border-border-color shadow-sm mb-6">
+            <div className="flex items-center justify-between bg-bg-panel p-4 border border-border-color shadow-sm mb-6">
               <div className="flex items-center space-x-4">
                 <div className={cn(
-                  "px-4 py-2 rounded-lg font-bold text-sm  tracking-wider border",
+                  "px-4 py-2 font-bold text-sm  tracking-wider border",
                   email.riskScore >= 80 ? ' text-accent-red border-accent-red/30' :
                     email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30' :
                       'text-accent-green border-accent-green/30'
@@ -213,7 +213,7 @@ export function Dashboard() {
               </div>
               <button
                 onClick={handleReset}
-                className="flex items-center space-x-2 px-4 py-2 bg-bg-dark border border-border-color hover:border-accent-red hover:text-accent-red rounded-lg transition-colors text-sm font-medium text-text-muted"
+                className="flex items-center space-x-2 px-4 py-2 bg-bg-dark border border-border-color hover:border-accent-red hover:text-accent-red transition-colors text-sm font-medium text-text-muted"
               >
                 <Trash2 className="w-4 h-4" />
                 <span>Clear Analysis</span>
@@ -238,9 +238,9 @@ export function Dashboard() {
             <DomainAnalysisPanel email={email} />
 
             {/* Raw Body Content (Optional viewing) */}
-            <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mt-6">
+            <div className="bg-bg-card border border-border-color shadow-lg mt-6">
               <div
-                className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+                className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b' : ''}`}
                 onClick={() => setRawExpanded(!rawExpanded)}
               >
                 <div className="flex items-center space-x-3">
@@ -252,7 +252,7 @@ export function Dashboard() {
 
               {rawExpanded && (
                 <div className="p-6">
-                  <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 rounded border border-border-color">
+                  <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 border border-border-color">
                     {email.body || email.html || 'No readable text content found.'}
                   </pre>
                 </div>
@@ -270,7 +270,7 @@ export function Dashboard() {
           rel="noopener noreferrer"
           className="hover:text-accent-cyan transition-colors"
         >
-          Copyright © 2026 | Powered by Google Gemini
+          Copyright © 2026 Yeshu · Built for Security Teams
         </a>
       </footer>
     </div>

@@ -9,9 +9,9 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
   if (email.received.length === 0) return null;
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b rounded-t-xl' : 'rounded-xl'}`}
+        className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${expanded ? 'border-b' : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -48,7 +48,7 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
                   {hop.hop}
                 </div>
 
-                <div className="bg-bg-panel border border-border-color rounded-lg p-4 transition-colors hover:border-accent-green/50">
+                <div className="bg-bg-panel border border-border-color p-4 transition-colors hover:border-accent-green/50">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 gap-4">
                     <div className="flex items-center space-x-3 text-sm flex-wrap gap-y-2">
                       <div className="flex items-center space-x-2 text-text-secondary">

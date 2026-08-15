@@ -33,7 +33,7 @@ function FindingCard({ finding }: { finding: ContentFinding }) {
 
   return (
     <div className={cn(
-      "border rounded-lg overflow-hidden transition-all duration-200",
+      "border overflow-hidden transition-all duration-200",
       severity.border,
       isExpanded ? 'shadow-md' : 'hover:shadow-sm'
     )}>
@@ -42,7 +42,7 @@ function FindingCard({ finding }: { finding: ContentFinding }) {
         className="w-full px-4 py-3 flex items-center justify-between text-left bg-bg-panel hover:bg-bg-dark/50 transition-colors"
       >
         <div className="flex items-center space-x-3 min-w-0">
-          <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", severity.bg)}>
+          <div className={cn("w-8 h-8 flex items-center justify-center shrink-0", severity.bg)}>
             <TypeIcon className={cn("w-4 h-4", typeInfo.color)} />
           </div>
           <div className="min-w-0">
@@ -100,9 +100,9 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
   ];
 
   return (
-    <div className="bg-bg-card border border-border-color rounded-xl shadow-lg mb-6">
+    <div className="bg-bg-card border border-border-color shadow-lg mb-6">
       <div
-        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b rounded-t-xl" : "rounded-xl")}
+        className={cn("px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color", expanded ? "border-b" : "")}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
@@ -164,7 +164,7 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
                   <div
                     key={label}
                     className={cn(
-                      "flex flex-col items-center p-3 rounded-lg border transition-colors",
+                      "flex flex-col items-center p-3 border transition-colors",
                       count > 0 ? `${bg} border-current/20` : 'bg-bg-panel border-border-color',
                     )}
                   >

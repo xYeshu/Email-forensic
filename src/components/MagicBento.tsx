@@ -39,8 +39,8 @@ const cardData: CardDataItem[] = [
   },
   {
     color: '#0a0a0a',
-    title: 'Client friendly ',
-    description: 'The Advanced AI models are custom trained to clearly state factors that could not be verified from the eml file and identify any Residual Risk',
+    title: 'Language precison and Client friendly ',
+    description: 'The AI models are custom trained to clearly state factors that could NOT be verified from the eml file. Even if a mail is classified legitimate it identifies any Residual Risk that remain even in a legitimate email (like sender account compromise)',
     label: 'Buissness friendly',
     icon: FileText ,
   },
