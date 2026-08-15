@@ -48,7 +48,7 @@ export function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div>
-              <h1 className="text-xl font-bold tracking-tight">AI Email Forensics</h1>
+              <h1 className="text-xl font-bold tracking-tight">AI Email Forensic</h1>
               <p className="text-xs text-text-muted uppercase tracking-wider">Automating Security Analysis with acuracy</p>
             </div>
           </div>
