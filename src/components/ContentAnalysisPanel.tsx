@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Code2, Eye, EyeOff, FormInput, Radio, ChevronDown, ChevronUp, AlertTriangle, ShieldAlert, Info } from 'lucide-react';
+import { Code2, Eye, EyeOff, FormInput, Radio, ChevronDown, ChevronUp, AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import type { AnalyzedEmail, ContentFinding, ContentFindingSeverity } from '../types';
 import { cn } from '../lib/utils';
 import { InfoTooltip } from './InfoTooltip';
@@ -47,10 +47,10 @@ function FindingCard({ finding }: { finding: ContentFinding }) {
           </div>
           <div className="min-w-0">
             <div className="flex items-center space-x-2">
-              <span className={cn("text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded", severity.bg, severity.color)}>
+              <span className={cn("text-xs font-bold uppercase tracking-wider px-1.5 py-0.5", severity.bg, severity.color)}>
                 {severity.label}
               </span>
-              <span className={cn("text-xs px-1.5 py-0.5 rounded bg-bg-dark text-text-muted")}>
+              <span className={cn("text-xs px-1.5 py-0.5 bg-bg-dark text-text-muted")}>
                 {typeInfo.label}
               </span>
             </div>
@@ -63,22 +63,24 @@ function FindingCard({ finding }: { finding: ContentFinding }) {
       </button>
 
       {isExpanded && (
-        <div className="px-4 pb-4 pt-2 space-y-3 bg-bg-card border-t border-border-color/50 animate-in fade-in slide-in-from-top-2 duration-200">
-          <p className="text-sm text-text-secondary leading-relaxed">{finding.description}</p>
-
-          {finding.mitreTactic && (
-            <div className="flex items-center space-x-2">
-              <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">MITRE ATT&CK:</span>
-              <span className="text-xs font-mono text-accent-cyan bg-accent-cyan/10 px-2 py-0.5 rounded">{finding.mitreTactic}</span>
+        <div className="p-4 bg-bg-card border-t border-border-color space-y-3">
+          <p className="text-xs text-text-secondary leading-relaxed">{finding.description}</p>
+          {finding.evidence && (
+            <div>
+              <span className="text-xs font-semibold text-text-muted uppercase block mb-1">Offending Code / Evidence:</span>
+              <pre className="text-xs font-mono text-text-secondary bg-bg-dark p-3 border border-border-color overflow-x-auto max-h-40 custom-scrollbar whitespace-pre-wrap break-all">
+                {finding.evidence}
+              </pre>
             </div>
           )}
-
-          <div>
-            <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Evidence</span>
-            <pre className="text-xs font-mono text-text-secondary bg-bg-dark p-3 rounded border border-border-color overflow-x-auto custom-scrollbar whitespace-pre-wrap break-all">
-              {finding.evidence}
-            </pre>
-          </div>
+          {finding.mitreTactic && (
+            <div className="flex items-center space-x-2 text-xs text-text-muted pt-1">
+              <span>MITRE ATT&CK:</span>
+              <span className="font-mono text-accent-orange bg-accent-orange/10 px-1.5 py-0.5 border border-accent-orange/20">
+                {finding.mitreTactic}
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -89,14 +91,16 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
   const [expanded, setExpanded] = useState(true);
   const ca = email.contentAnalysis;
 
+  if (!ca) return null;
+
   const totalFindings = ca.findings.length;
-  const overallSeverity = severityConfig[ca.overallRisk];
+  const isClean = totalFindings === 0;
 
   const counters = [
     { label: 'Hidden Text', count: ca.hiddenTextCount, icon: EyeOff, color: 'text-accent-purple', bg: 'bg-accent-purple/10' },
     { label: 'Tracking Pixels', count: ca.trackingPixelCount, icon: Radio, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-    { label: 'Suspicious Forms', count: ca.suspiciousFormCount, icon: FormInput, color: 'text-red-400', bg: 'bg-red-500/10' },
-    { label: 'Scripts / Encoded', count: ca.embeddedScriptCount, icon: Code2, color: 'text-accent-orange', bg: 'bg-accent-orange/10' },
+    { label: 'Forms in Body', count: ca.suspiciousFormCount, icon: FormInput, color: 'text-red-400', bg: 'bg-red-500/10' },
+    { label: 'Scripts / Code', count: ca.embeddedScriptCount, icon: Code2, color: 'text-red-400', bg: 'bg-red-500/10' },
   ];
 
   return (
@@ -106,33 +110,39 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          <Eye className="w-6 h-6 text-accent-cyan" />
+          <Code2 className="w-6 h-6 text-accent-cyan" />
           <h2 className="text-xl font-semibold text-text-primary flex items-center">
-            Content / Body Analysis
+            HTML & Body Content Analysis
             <InfoTooltip content={
               <div className="space-y-2">
-                <p><strong>Relevance:</strong> Deep inspection of the email HTML body for malicious patterns.</p>
-                <ul className="list-disc pl-4 space-y-1">
-                  <li><strong>Hidden Text:</strong> Text concealed via CSS (display:none, font-size:0, opacity:0) to bypass filters.</li>
-                  <li><strong>Tracking Pixels:</strong> 1×1 images or hidden image beacons that confirm email opens.</li>
-                  <li><strong>Forms:</strong> Embedded HTML forms used for credential harvesting.</li>
-                  <li><strong>Scripts:</strong> Embedded JavaScript, event handlers, data: URIs, encoded payloads.</li>
+                <p><strong>Body Forensics:</strong></p>
+                <ul className="list-disc pl-4 space-y-1 text-xs">
+                  <li><strong>Hidden Text:</strong> Zero-font, transparent or off-screen text used to bypass Bayesian spam filters.</li>
+                  <li><strong>Tracking Pixels:</strong> 1x1 invisible images used for read-receipt telemetry.</li>
+                  <li><strong>Phishing Forms:</strong> Interactive input forms embedded directly in the email.</li>
+                  <li><strong>Embedded Scripts:</strong> JavaScript or VBScript tags that execute on vulnerable clients.</li>
                 </ul>
               </div>
             } />
           </h2>
         </div>
-        <div className="flex items-center space-x-3">
-          {totalFindings > 0 && (
-            <span className={cn("px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border", overallSeverity.bg, overallSeverity.color, overallSeverity.border)}>
-              {totalFindings} Finding{totalFindings !== 1 ? 's' : ''}
-            </span>
-          )}
-          {totalFindings === 0 && ca.hasHtml && (
-            <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border bg-accent-green/10 text-accent-green border-accent-green/30">
-              Clean
-            </span>
-          )}
+        <div className="flex items-center space-x-4">
+          <span className={cn(
+            "text-xs font-bold uppercase tracking-wider px-3 py-1 border flex items-center space-x-1.5",
+            isClean ? 'bg-accent-green/10 text-accent-green border-accent-green/30' : 'bg-red-500/10 text-red-400 border-red-500/30'
+          )}>
+            {isClean ? (
+              <>
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Clean Body</span>
+              </>
+            ) : (
+              <>
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>{totalFindings} Finding{totalFindings > 1 ? 's' : ''}</span>
+              </>
+            )}
+          </span>
           {expanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
         </div>
       </div>
@@ -140,55 +150,51 @@ export function ContentAnalysisPanel({ email }: ContentAnalysisPanelProps) {
       {expanded && (
         <div className="p-6">
           {!ca.hasHtml && (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <Info className="w-12 h-12 text-text-muted mb-3 opacity-40" />
-              <p className="text-text-muted text-sm">No HTML body detected in this email. Content analysis requires an HTML body.</p>
+            <div className="mb-4 p-3 bg-bg-panel border border-border-color text-text-muted text-xs flex items-center space-x-2">
+              <Eye className="w-4 h-4 text-accent-cyan" />
+              <span>Plain text email only — No HTML or CSS evasion techniques found.</span>
             </div>
           )}
 
-          {ca.hasHtml && totalFindings === 0 && (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <Eye className="w-12 h-12 text-accent-green mb-3 opacity-60" />
-              <p className="text-accent-green font-medium mb-1">No Suspicious Content Patterns Detected</p>
-              <p className="text-text-muted text-sm max-w-md">
-                The HTML body was scanned for hidden text, tracking pixels, credential harvesting forms, and embedded scripts. No suspicious patterns were identified.
+          {/* Quick Counter Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            {counters.map(({ label, count, icon: Icon, color, bg }) => {
+              const isAlert = count > 0;
+              return (
+                <div
+                  key={label}
+                  className={cn(
+                    "flex flex-col items-center p-3 border transition-colors",
+                    isAlert ? `${bg} border-red-500/30` : 'bg-bg-panel border-border-color',
+                  )}
+                >
+                  <Icon className={cn("w-5 h-5 mb-1", isAlert ? color : 'text-text-muted')} />
+                  <span className={cn("text-xl font-bold font-mono", isAlert ? color : 'text-text-primary')}>
+                    {count}
+                  </span>
+                  <span className="text-[10px] text-text-muted uppercase tracking-wider mt-0.5">{label}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Findings List */}
+          {isClean ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center bg-bg-panel border border-border-color">
+              <ShieldCheck className="w-12 h-12 text-accent-green mb-2" />
+              <p className="text-sm font-semibold text-text-primary">No Malicious HTML or Evasion Tactics Detected</p>
+              <p className="text-xs text-text-muted mt-1 max-w-md">
+                No hidden text, phishing forms, tracking beacons, or dangerous script payloads were discovered in the body.
               </p>
             </div>
-          )}
-
-          {ca.hasHtml && totalFindings > 0 && (
-            <div className="space-y-6">
-              {/* Summary Counters */}
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                {counters.map(({ label, count, icon: Icon, color, bg }) => (
-                  <div
-                    key={label}
-                    className={cn(
-                      "flex flex-col items-center p-3 border transition-colors",
-                      count > 0 ? `${bg} border-current/20` : 'bg-bg-panel border-border-color',
-                    )}
-                  >
-                    <Icon className={cn("w-5 h-5 mb-1.5", count > 0 ? color : 'text-text-muted opacity-40')} />
-                    <span className={cn("text-2xl font-bold", count > 0 ? color : 'text-text-muted opacity-40')}>
-                      {count}
-                    </span>
-                    <span className="text-xs text-text-muted text-center mt-0.5">{label}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Findings List */}
-              <div>
-                <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3 flex items-center space-x-2">
-                  <ShieldAlert className="w-4 h-4 text-accent-orange" />
-                  <span>Detailed Findings</span>
-                </h3>
-                <div className="space-y-3">
-                  {ca.findings.map((finding, i) => (
-                    <FindingCard key={i} finding={finding} />
-                  ))}
-                </div>
-              </div>
+          ) : (
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
+                Detected Content Anomalies ({totalFindings})
+              </h3>
+              {ca.findings.map((f, i) => (
+                <FindingCard key={`${f.type}-${i}`} finding={f} />
+              ))}
             </div>
           )}
         </div>

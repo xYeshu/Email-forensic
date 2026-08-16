@@ -40,7 +40,6 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
 
       {expanded && (
         <div className="p-6">
-
           <div className="relative border-l-2 border-border-color ml-4 space-y-8">
             {email.received.map((hop, i) => (
               <div key={i} className="relative pl-8">
@@ -53,22 +52,22 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
                     <div className="flex items-center space-x-3 text-sm flex-wrap gap-y-2">
                       <div className="flex items-center space-x-2 text-text-secondary">
                         <Server className="w-4 h-4" />
-                        <span className="font-mono bg-bg-dark px-2 py-1 rounded border border-border-color max-w-[200px] truncate" title={hop.from}>{hop.from}</span>
+                        <span className="font-mono bg-bg-dark px-2 py-1 border border-border-color max-w-[200px] truncate" title={hop.from}>{hop.from}</span>
                       </div>
                       <ArrowRight className="w-4 h-4 text-text-muted" />
                       <div className="flex items-center space-x-2 text-text-primary">
                         <Server className="w-4 h-4 text-accent-green" />
-                        <span className="font-mono bg-bg-dark px-2 py-1 rounded border border-border-color max-w-[200px] truncate" title={hop.by}>{hop.by}</span>
+                        <span className="font-mono bg-bg-dark px-2 py-1 border border-border-color max-w-[200px] truncate" title={hop.by}>{hop.by}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
                       {hop.formattedDelay && (
-                        <div className="text-xs text-accent-orange font-mono bg-accent-orange/10 px-2 py-1 rounded border border-accent-orange/20" title="Delay from previous hop">
+                        <div className="text-xs text-accent-orange font-mono bg-accent-orange/10 px-2 py-1 border border-accent-orange/20" title="Delay from previous hop">
                           +{hop.formattedDelay}
                         </div>
                       )}
-                      <div className="text-xs text-text-secondary bg-bg-dark px-3 py-1 rounded-full border border-border-color inline-block lg:w-auto w-fit">
+                      <div className="text-xs text-text-secondary bg-bg-dark px-3 py-1 border border-border-color inline-block lg:w-auto w-fit">
                         {hop.date || 'Unknown Date'}
                       </div>
                     </div>
@@ -78,7 +77,7 @@ export function TimelinePanel({ email }: { email: AnalyzedEmail }) {
                     {hop.ip && (
                       <div className="col-span-1 md:col-span-3 mb-2 flex items-center space-x-2">
                         <span className="text-text-muted">Extracted IP:</span>
-                        <span className="font-mono text-accent-cyan bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20">{hop.ip}</span>
+                        <span className="font-mono text-accent-cyan bg-accent-cyan/10 px-2 py-0.5 border border-accent-cyan/20">{hop.ip}</span>
                         {hop.hop === 1 && (
                           <span className="text-xs text-accent-red font-bold ml-2">(Likely Originating IP)</span>
                         )}

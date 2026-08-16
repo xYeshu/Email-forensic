@@ -5,6 +5,7 @@ import { analyzeWithAI } from '../core/ai';
 import { cn } from '../lib/utils';
 import { InfoTooltip } from './InfoTooltip';
 import Strands from './Strands';
+import { FormattedAiText } from './FormattedAiText';
 
 interface AiPanelProps {
   email: AnalyzedEmail;
@@ -14,8 +15,8 @@ export function AiPanel({ email }: AiPanelProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AIAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string>('gemini-2.5-flash');
   const [expanded, setExpanded] = useState(true);
-  const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash');
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
@@ -23,9 +24,9 @@ export function AiPanel({ email }: AiPanelProps) {
     try {
       const res = await analyzeWithAI(email, selectedModel);
       setResult(res);
-      setExpanded(true);
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during analysis.');
+    } catch (e: any) {
+      console.error(e);
+      setError(e.message || "Failed to analyze with AI.");
     } finally {
       setIsAnalyzing(false);
     }
@@ -123,33 +124,27 @@ export function AiPanel({ email }: AiPanelProps) {
                   glassSize={1}
                 />
               </div>
-              {/* <div className="relative z-10 flex flex-col items-center space-y-4 px-6 py-4 bg-bg-dark/70 backdrop-blur-md rounded-2xl border border-border-color/40 shadow-2xl">
-                <div className="relative w-12 h-12 flex items-center justify-center">
-                  <div className="absolute inset-0 border-2 border-accent-purple/20 rounded-full"></div>
-                  <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin"></div>
-                  <BrainCircuit className="w-5 h-5 text-accent-purple animate-pulse" />
-                </div>
-                <p className="text-text-primary text-sm font-semibold tracking-wider uppercase animate-pulse">AI Analyst is investigating...</p>
-              </div> */}
+             
             </div>
           )}
 
-          {result && !isAnalyzing && (
+          {result && (
             <div className="space-y-6">
+              {/* Analysis Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Left Column: Summary & Explanation */}
                 <div className="col-span-1 md:col-span-2 space-y-6">
                   <div>
                     <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Executive Summary</h3>
                     <div className="p-4 bg-bg-panel border border-border-color">
-                      <p className="text-text-primary leading-relaxed">{result.summary}</p>
+                      <FormattedAiText content={result.summary} />
                     </div>
                   </div>
 
                   <div>
                     <h3 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">Detailed Analysis</h3>
                     <div className="p-4 bg-bg-panel border border-border-color">
-                      <p className="text-text-secondary leading-relaxed whitespace-pre-wrap">{result.explanation}</p>
+                      <FormattedAiText content={result.explanation} />
                     </div>
                   </div>
                 </div>
@@ -259,7 +254,7 @@ export function AiPanel({ email }: AiPanelProps) {
                           <div className="w-5 h-5 rounded-full bg-accent-cyan/10 flex items-center justify-center shrink-0 mt-0.5">
                             <HelpCircle className="w-3 h-3 text-accent-cyan" />
                           </div>
-                          <p className="text-sm text-text-secondary leading-relaxed">{item}</p>
+                          <p className="text-xs text-text-secondary leading-relaxed">{item}</p>
                         </div>
                       ))}
                     </div>

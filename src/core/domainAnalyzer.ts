@@ -24,7 +24,7 @@ const BRAND_DATABASE: BrandEntry[] = [
   { name: 'PayPal', domains: ['paypal.com'], keywords: ['paypal'] },
   { name: 'Microsoft', domains: ['microsoft.com', 'outlook.com', 'live.com', 'hotmail.com', 'office.com', 'office365.com', 'microsoftonline.com'], keywords: ['microsoft', 'outlook', 'hotmail'] },
   { name: 'Google', domains: ['google.com', 'gmail.com', 'googlemail.com', 'googleapis.com'], keywords: ['google', 'gmail'] },
-  { name: 'Apple', domains: ['apple.com', 'icloud.com', 'me.com', 'mac.com'], keywords: ['apple', 'icloud'] },
+  { name: 'Apple', domains: ['apple.com', 'icloud.com', 'mac.com'], keywords: ['apple', 'icloud'] },
   { name: 'Amazon', domains: ['amazon.com', 'amazon.co.uk', 'amazon.de', 'amazon.in', 'amazonaws.com'], keywords: ['amazon', 'aws'] },
   { name: 'Facebook / Meta', domains: ['facebook.com', 'fb.com', 'meta.com', 'instagram.com', 'whatsapp.com'], keywords: ['facebook', 'instagram', 'whatsapp', 'meta'] },
   { name: 'Netflix', domains: ['netflix.com'], keywords: ['netflix'] },
@@ -466,12 +466,50 @@ function detectComboSquatting(senderDomain: string, allDomains: string[]): Domai
   return findings;
 }
 
+function detectDisplayNameSpoofing(senderDomain: string, displayName?: string): DomainFinding[] {
+  if (!displayName || !senderDomain) return [];
+  const findings: DomainFinding[] = [];
+  const nameLower = displayName.toLowerCase();
+  const domainLower = senderDomain.toLowerCase();
+
+  for (const brand of BRAND_DATABASE) {
+    // Check if the display name contains the brand name or any of its keywords
+    const matchesBrand = brand.keywords.some(kw => {
+      // Use word boundary or inclusion
+      const regex = new RegExp(`\\b${kw}\\b`, 'i');
+      return regex.test(nameLower);
+    }) || nameLower.includes(brand.name.toLowerCase());
+
+    if (matchesBrand) {
+      // Check if the sender domain is actually authorized for this brand
+      const isAuthenticBrandDomain = brand.domains.some(d => domainLower === d || domainLower.endsWith('.' + d));
+
+      if (!isAuthenticBrandDomain) {
+        findings.push({
+          type: 'display-name-spoof',
+          severity: 'critical',
+          brand: brand.name,
+          legitimateDomain: brand.domains[0],
+          suspiciousDomain: senderDomain,
+          title: `Display Name Brand Spoofing — Claiming to be ${brand.name}`,
+          description: `The sender display name is "${displayName}" (claiming to be ${brand.name}), but the actual sending domain is "${senderDomain}" (which is NOT an authentic ${brand.name} domain). This is an active brand spoofing / spear-phishing technique designed to deceive recipients into trusting malicious notifications.`,
+          confidence: 95,
+          technique: 'Display Name Impersonation',
+        });
+      }
+    }
+  }
+
+  return findings;
+}
+
 // ─── MAIN EXPORT ──────────────────────────────────────────────────────────
 
 export function analyzeDomains(
   senderDomain: string,
-  allDomains: string[],
-  allUrls: string[]
+  senderDisplayName: string = '',
+  allDomains: string[] = [],
+  allUrls: string[] = []
 ): DomainAnalysis {
   // Extract domains from URLs too
   const urlDomains: string[] = [];
@@ -485,6 +523,7 @@ export function analyzeDomains(
   const combinedDomains = Array.from(new Set([...allDomains, ...urlDomains]));
 
   const allFindings: DomainFinding[] = [
+    ...detectDisplayNameSpoofing(senderDomain, senderDisplayName),
     ...detectHomographAttack(senderDomain, combinedDomains),
     ...detectPunycode(senderDomain, combinedDomains),
     ...detectTyposquatting(senderDomain, combinedDomains),
@@ -518,5 +557,6 @@ export function analyzeDomains(
     typosquatCount: uniqueFindings.filter(f => f.type === 'typosquat').length,
     subdomainAbuseCount: uniqueFindings.filter(f => f.type === 'subdomain-abuse').length,
     comboSquatCount: uniqueFindings.filter(f => f.type === 'combosquat').length,
+    displayNameSpoofCount: uniqueFindings.filter(f => f.type === 'display-name-spoof').length,
   };
 }

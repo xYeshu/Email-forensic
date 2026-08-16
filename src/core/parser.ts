@@ -6,7 +6,10 @@ import { analyzeContent } from './contentAnalyzer';
 import { analyzeDomains } from './domainAnalyzer';
 
 export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
-  const arrayBuffer = await file.arrayBuffer();
+  const [arrayBuffer, rawEmlText] = await Promise.all([
+    file.arrayBuffer(),
+    file.text().catch(() => '')
+  ]);
   const parser = new PostalMime();
   const email = await parser.parse(arrayBuffer as any);
 
@@ -160,47 +163,116 @@ export async function parseEmlFile(file: File): Promise<AnalyzedEmail> {
   const fullContent = (email.subject || '') + '\n' + (email.text || '') + '\n' + (email.html || '');
   const iocs = extractIOCs(fullContent);
 
-  const from: EmailAddress | null = email.from ? { name: email.from.name || '', address: email.from.address || '' } : null;
-  const to = (email.to || []).map(t => ({ name: t.name || '', address: t.address || '' }));
+  // Helper to extract clean email address and name from arbitrary strings
+  const extractCleanAddress = (raw?: string | string[]): EmailAddress | null => {
+    if (!raw) return null;
+    const str = Array.isArray(raw) ? raw[0] : raw;
+    if (!str || typeof str !== 'string') return null;
+
+    // Check angle bracket address <user@domain.com>
+    const angleMatch = str.match(/<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>/);
+    if (angleMatch) {
+      const address = angleMatch[1].trim().toLowerCase();
+      let name = str.substring(0, angleMatch.index).trim();
+      name = name.replace(/^[<>\s,_\-"'`]+|[<>\s,_\-"'`]+$/g, '').trim();
+      return { name, address };
+    }
+
+    // Check plain email format
+    const emailMatch = str.match(/\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b/);
+    if (emailMatch) {
+      const address = emailMatch[1].trim().toLowerCase();
+      let name = str.replace(emailMatch[0], '').trim();
+      name = name.replace(/^[<>\s,_\-"'`]+|[<>\s,_\-"'`]+$/g, '').trim();
+      return { name, address };
+    }
+
+    return { name: str.replace(/^[<>\s,_\-"'`]+|[<>\s,_\-"'`]+$/g, '').trim(), address: '' };
+  };
+
+  // Extract from address with fallback for obfuscated headers
+  let from: EmailAddress | null = null;
+  if (email.from && email.from.address && email.from.address.includes('@')) {
+    from = { name: (email.from.name || '').trim(), address: email.from.address.trim().toLowerCase() };
+  } else {
+    from = extractCleanAddress(headerMap['from']);
+  }
+
+  // Fallbacks if address is still missing
+  if (!from || !from.address) {
+    const sidPra = headerMap['x-sid-pra'];
+    if (sidPra) {
+      const parsedPra = extractCleanAddress(sidPra);
+      if (parsedPra?.address) from = { name: from?.name || '', address: parsedPra.address };
+    }
+  }
+
+  // Fallback for display name if postal-mime dropped it due to commas
+  if (from && !from.name && headerMap['from']) {
+    const rawFromParsed = extractCleanAddress(headerMap['from']);
+    if (rawFromParsed?.name) from.name = rawFromParsed.name;
+  }
+
+  const to = (email.to || []).map(t => ({ name: t.name || '', address: t.address ? t.address.toLowerCase() : '' }));
   
   const replyToRaw = headerMap['reply-to'];
   const replyTo: EmailAddress[] = [];
   if (replyToRaw) {
       const arr = Array.isArray(replyToRaw) ? replyToRaw : [replyToRaw];
       arr.forEach(r => {
-          // crude parse just for simplicity
-          const match = r.match(/<([^>]+)>/);
-          if (match) replyTo.push({ name: r.replace(match[0], '').trim(), address: match[1] });
-          else replyTo.push({ name: '', address: r.trim() });
+          const parsed = extractCleanAddress(r);
+          if (parsed && (parsed.address || parsed.name)) replyTo.push(parsed);
       });
   }
+
+  // Extract return-path cleanly
+  let returnPath = '';
+  const rawReturnPath = headerMap['return-path'];
+  if (rawReturnPath) {
+    const parsed = extractCleanAddress(rawReturnPath);
+    returnPath = parsed?.address || (Array.isArray(rawReturnPath) ? rawReturnPath[0] : rawReturnPath);
+  } else {
+    // Fallback: Check authentication-results smtp.mailfrom=...
+    const authHeader = headerMap['authentication-results'];
+    if (authHeader) {
+      const authText = Array.isArray(authHeader) ? authHeader.join('; ') : authHeader;
+      const mailfromMatch = authText.match(/smtp\.mailfrom=([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i)
+        || authText.match(/smtp\.mailfrom=([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i);
+      if (mailfromMatch) {
+        returnPath = mailfromMatch[1];
+      }
+    }
+  }
+  returnPath = returnPath.replace(/^[<]+|[>]+$/g, '').trim().toLowerCase();
 
   // Run deep HTML content analysis
   const contentAnalysis = analyzeContent(email.html || '');
 
   // Run domain impersonation / typosquatting analysis
-  const senderDomain = from?.address?.split('@')[1] || '';
-  const domainAnalysis = analyzeDomains(senderDomain, iocs.domains, iocs.urls);
+  const senderDomain = from?.address?.split('@')[1]?.toLowerCase() || '';
+  const senderDisplayName = from?.name || '';
+  const domainAnalysis = analyzeDomains(senderDomain, senderDisplayName, iocs.domains, iocs.urls);
 
   const analyzed: AnalyzedEmail = {
     headers: headerMap,
     from,
     to,
-    cc: (email.cc || []).map(c => ({ name: c.name || '', address: c.address || '' })),
-    bcc: (email.bcc || []).map(b => ({ name: b.name || '', address: b.address || '' })),
+    cc: (email.cc || []).map(c => ({ name: c.name || '', address: (c.address || '').toLowerCase() })),
+    bcc: (email.bcc || []).map(b => ({ name: b.name || '', address: (b.address || '').toLowerCase() })),
     subject: email.subject || '(No Subject)',
     body: email.text || '',
     html: email.html || '',
     attachments,
     messageId: email.messageId || (headerMap['message-id'] as string) || '',
     replyTo,
-    returnPath: (headerMap['return-path'] as string) || '',
+    returnPath,
     received: receivedHops,
     date: email.date || '',
     iocs,
     authResults,
     contentAnalysis,
     domainAnalysis,
+    rawEml: rawEmlText,
     riskScore: 0,
     justification: []
   };

@@ -18,12 +18,13 @@ export interface AnalyzedEmail {
   authResults: AuthResults;
   contentAnalysis: ContentAnalysis;
   domainAnalysis: DomainAnalysis;
+  rawEml?: string;
   riskScore: number;
   justification?: string[];
 }
 
 export interface DomainFinding {
-  type: 'homograph' | 'punycode' | 'typosquat' | 'subdomain-abuse' | 'combosquat';
+  type: 'homograph' | 'punycode' | 'typosquat' | 'subdomain-abuse' | 'combosquat' | 'display-name-spoof';
   severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
   brand: string;
   legitimateDomain: string;
@@ -44,6 +45,7 @@ export interface DomainAnalysis {
   typosquatCount: number;
   subdomainAbuseCount: number;
   comboSquatCount: number;
+  displayNameSpoofCount: number;
 }
 
 export type ContentFindingSeverity = 'info' | 'low' | 'medium' | 'high' | 'critical';

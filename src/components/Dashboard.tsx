@@ -7,12 +7,13 @@ import { TimelinePanel } from './TimelinePanel';
 import { AiPanel } from './AiPanel';
 import { ContentAnalysisPanel } from './ContentAnalysisPanel';
 import { DomainAnalysisPanel } from './DomainAnalysisPanel';
+import { EmailPreviewPanel } from './UserViewPanel';
 import MagicBento from './MagicBento';
 import ShinyText from './ShinyText';
 import Strands from './Strands';
 import type { AnalyzedEmail } from '../types';
 import { parseEmlFile } from '../core/parser';
-import { Shield, Trash2, ChevronDown, ChevronUp, FileText, Lock, CheckCircle } from 'lucide-react';
+import { Shield, Trash2, Lock, CheckCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { InfoTooltip } from './InfoTooltip';
 
@@ -20,7 +21,6 @@ export function Dashboard() {
   const [email, setEmail] = useState<AnalyzedEmail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [rawExpanded, setRawExpanded] = useState(false);
 
   const handleFile = async (file: File) => {
     setIsLoading(true);
@@ -191,12 +191,12 @@ export function Dashboard() {
             <div className="flex items-center justify-between bg-bg-panel p-4 border border-border-color shadow-sm mb-6">
               <div className="flex items-center space-x-4">
                 <div className={cn(
-                  "px-4 py-2 font-bold text-sm  tracking-wider border",
-                  email.riskScore >= 80 ? ' text-accent-red border-accent-red/30' :
-                    email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30' :
-                      'text-accent-green border-accent-green/30'
+                  "px-4 py-2 font-bold text-sm tracking-wider border",
+                  email.riskScore >= 80 ? 'text-accent-red border-accent-red/30 bg-accent-red/10' :
+                    email.riskScore >= 40 ? 'text-accent-orange border-accent-orange/30 bg-accent-orange/10' :
+                      'text-accent-orange'
                 )}>
-                  Header Risk Score: {email.riskScore}/100
+                  Header Score: {email.riskScore}/100
                 </div>
                 <div className="flex items-center text-sm text-text-secondary">
                   <InfoTooltip content={
@@ -237,27 +237,8 @@ export function Dashboard() {
             {/* Domain Impersonation Analysis Panel */}
             <DomainAnalysisPanel email={email} />
 
-            {/* Raw Body Content (Optional viewing) */}
-            <div className="bg-bg-card border border-border-color shadow-lg mt-6">
-              <div
-                className={`px-6 py-4 flex items-center justify-between bg-bg-panel cursor-pointer border-border-color ${rawExpanded ? 'border-b' : ''}`}
-                onClick={() => setRawExpanded(!rawExpanded)}
-              >
-                <div className="flex items-center space-x-3">
-                  <FileText className="w-6 h-6 text-text-muted" />
-                  <h2 className="text-xl font-semibold text-text-primary">Raw Content Preview</h2>
-                </div>
-                {rawExpanded ? <ChevronUp className="w-5 h-5 text-text-muted" /> : <ChevronDown className="w-5 h-5 text-text-muted" />}
-              </div>
-
-              {rawExpanded && (
-                <div className="p-6">
-                  <pre className="text-xs font-mono text-text-secondary whitespace-pre-wrap overflow-x-auto max-h-96 custom-scrollbar bg-bg-dark p-4 border border-border-color">
-                    {email.body || email.html || 'No readable text content found.'}
-                  </pre>
-                </div>
-              )}
-            </div>
+            {/* Unified Email Content Preview (Raw Content & Sandboxed User View with Consent Gate) */}
+            <EmailPreviewPanel email={email} />
           </div>
         )}
       </main>

@@ -152,6 +152,10 @@ export function calculateRiskScore(email: AnalyzedEmail): { riskScore: number, j
   // Domain Impersonation findings
   if (email.domainAnalysis) {
     const da = email.domainAnalysis;
+    if (da.displayNameSpoofCount > 0) {
+      score += 45;
+      justification.push(`Display Name Brand Impersonation detected (+45)`);
+    }
     if (da.homographCount > 0) {
       score += 45;
       justification.push(`Homograph/IDN impersonation attack detected (+45)`);

@@ -111,7 +111,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-text-primary flex items-center space-x-2 border-b border-border-color pb-2">
                     <AtSign className="w-4 h-4 text-accent-green" />
-                    <span>Email Addresses ({iocs.emails.length})</span>
+                    <span>Associated Emails ({iocs.emails.length})</span>
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.emails.map((emailAddr, i) => (
@@ -128,7 +128,7 @@ export function IocPanel({ email }: { email: AnalyzedEmail }) {
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-text-primary flex items-center space-x-2 border-b border-border-color pb-2">
                     <Hash className="w-4 h-4 text-accent-purple" />
-                    <span>Hashes ({iocs.hashes.length})</span>
+                    <span>File Hashes (SHA-256) ({iocs.hashes.length})</span>
                   </h3>
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                     {iocs.hashes.map((hash, i) => (
