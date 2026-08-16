@@ -97,19 +97,20 @@ export function calculateRiskScore(email: AnalyzedEmail): { riskScore: number, j
   }
 
   // Domain mismatches
-  const fromDomain = email.from?.address.split('@')[1];
-  const returnPathStr = typeof email.headers['return-path'] === 'string' ? email.headers['return-path'] : '';
-  const returnMatch = returnPathStr.match(/<.*?@(.*?)>/);
-  if (fromDomain && returnMatch && returnMatch[1] !== fromDomain) {
-    score += 20; // From and Return-Path mismatch
-    justification.push(`'From' domain does not match 'Return-Path' domain (+20)`);
+  // Domain mismatches (P1 Return-Path vs P2 From)
+  const fromDomain = email.from?.address?.includes('@') ? email.from.address.split('@')[1]?.toLowerCase() : '';
+  const returnPathDomain = email.returnPath ? (email.returnPath.includes('@') ? email.returnPath.split('@')[1]?.toLowerCase() : email.returnPath.toLowerCase()) : '';
+  
+  if (fromDomain && returnPathDomain && fromDomain !== returnPathDomain) {
+    score += 20; // P1 (Return-Path) and P2 (From) mismatch
+    justification.push(`P1/P2 Sender Mismatch: Visible 'From' (${fromDomain}) does not match envelope 'Return-Path' (${returnPathDomain}) (+20)`);
   }
   
-  if (email.replyTo.length > 0 && email.from) {
-    const replyToDomain = email.replyTo[0].address.split('@')[1];
+  if (email.replyTo.length > 0 && email.from && fromDomain) {
+    const replyToDomain = email.replyTo[0].address?.includes('@') ? email.replyTo[0].address.split('@')[1]?.toLowerCase() : '';
     if (replyToDomain && replyToDomain !== fromDomain) {
       score += 25; // Reply-To mismatch
-      justification.push(`'Reply-To' domain does not match 'From' domain (+25)`);
+      justification.push(`'Reply-To' domain (${replyToDomain}) does not match 'From' domain (${fromDomain}) (+25)`);
     }
   }
 
